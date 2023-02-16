@@ -5,11 +5,12 @@ import logging from './config/logging/logging';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import config from './config/db/config';
-import route from './routers/index';
-import photoRouter from './routers/PhotoRouter';
-
+import indexRouter from './routers/index';
+import photoRouter from './routers/photoRouter';
+import userRouter from './routers/userRouter';
 
 dotenv.config();
+
 
 const app: Express = express();
 const router = express();
@@ -20,6 +21,7 @@ const NAMESPACE = 'Server';
 mongoose
     .connect(config.mongo.url, config.mongo.options)
     .then((result) => {
+     // console.log(result);
         logging.info(NAMESPACE, 'Mongo Connected');
     })
     .catch((error) => {
@@ -46,7 +48,7 @@ router.use((req, res, next) => {
 
 
 
-//pub config
+//pug config
 app.set('view engine', 'pug')
 app.set('views', `${__dirname}/views`)
 
@@ -60,16 +62,16 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-//router
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/login' ,{ title: 'FotoBook' })
-})
-app.get('/signup', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/signup' ,{ title: 'FotoBook' })
-})
-app.get('/login', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/login' ,{ title: 'FotoBook' })
-})
+// //router
+// app.get('/', (req: Request, res: Response, next: NextFunction) => {
+//   res.render('pages/login' ,{ title: 'FotoBook' })
+// })
+// app.get('/signup', (req: Request, res: Response, next: NextFunction) => {
+//   res.render('pages/signup' ,{ title: 'FotoBook' })
+// })
+// app.get('/login', (req: Request, res: Response, next: NextFunction) => {
+//   res.render('pages/login' ,{ title: 'FotoBook' })
+// })
 
 
 /** Error handling */
@@ -82,9 +84,12 @@ router.use((req, res, next) => {
 });
 
 
+//mount the routes
+app.use("/", indexRouter)
+app.use("/photo", photoRouter)
+app.use("/user", userRouter)
 
 app.use(router);
-app.use('/photo', photoRouter);
 
 
 app.listen(port, () => {
