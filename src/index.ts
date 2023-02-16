@@ -11,7 +11,6 @@ import userRouter from './routers/userRouter';
 
 dotenv.config();
 
-
 const app: Express = express();
 const router = express();
 const port = process.env.PORT || 8001;
@@ -33,7 +32,6 @@ mongoose
     
 /** Log the request */
 router.use((req, res, next) => {
- 
   
   /** Log the req */
   logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
@@ -54,12 +52,11 @@ app.set('views', `${__dirname}/views`)
 
 //static files
 app.use(express.static(path.join(__dirname, 'public')))
-console.log(path.join(__dirname));
 
 
 /** Parse the body of the request */
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 // //router

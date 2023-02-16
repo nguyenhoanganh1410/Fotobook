@@ -3,21 +3,28 @@ import mongoose from 'mongoose';
 import User from '../model/user';
 
 
-// [POST] /user/
+// [POST] /user/register
 const createUser = (req: Request, res: Response, next: NextFunction) => {
-    let { author, title } = req.body;
+    let { firstName, lastName, avatar, email, password, status, lastLogin } = req.body;
 
-    const book = new User({
+    
+
+    const user = new User({
         _id: new mongoose.Types.ObjectId(),
-        author,
-        title
+        firstName,
+        lastName,
+        email,
+        password,
+        lastLogin,
+        avatar,
+        status
     });
 
-    return book
+    return user
         .save()
         .then((result) => {
             return res.status(201).json({
-                book: result
+                user: result
             });
         })
         .catch((error) => {
@@ -26,17 +33,17 @@ const createUser = (req: Request, res: Response, next: NextFunction) => {
                 error
             });
         });
-};
 
+};
 
 // [GET] /user/
 const getAllUser = (req: Request, res: Response, next: NextFunction) => {
     User.find()
         .exec()
-        .then((books) => {
+        .then((users) => {
             return res.status(200).json({
-                books: books,
-                count: books.length
+                users: users,
+                count: users.length
             });
         })
         .catch((error) => {

@@ -1,6 +1,11 @@
-import { Document } from 'mongoose';
+import { Date, Document } from 'mongoose';
 
 export default interface IUser extends Document {
-    title: string;
-    author: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    email: string;
+    password:string;
+    status: boolean;
+    lastLogin: Date;
 }
