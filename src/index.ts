@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import config from './config/db/config';
 import route from './routers/index';
 import photoRouter from './routers/PhotoRouter';
+
+
 dotenv.config();
 
 const app: Express = express();
@@ -15,18 +17,18 @@ const port = process.env.PORT || 8001;
 const NAMESPACE = 'Server';
 
 /** Connect to Mongo */
-// mongoose
-//     .connect(config.mongo.url, config.mongo.options)
-//     .then((result) => {
-//         logging.info(NAMESPACE, 'Mongo Connected');
-//     })
-//     .catch((error) => {
-//      // console.log(error);
+mongoose
+    .connect(config.mongo.url, config.mongo.options)
+    .then((result) => {
+        logging.info(NAMESPACE, 'Mongo Connected');
+    })
+    .catch((error) => {
+     // console.log(error);
       
-//         logging.error(NAMESPACE, error.message, error);
-//     });
+        logging.error(NAMESPACE, error.message, error);
+    });
 
-
+    
 /** Log the request */
 router.use((req, res, next) => {
  
@@ -43,25 +45,32 @@ router.use((req, res, next) => {
 });
 
 
+
 //pub config
 app.set('view engine', 'pug')
 app.set('views', `${__dirname}/views`)
 
 //static files
 app.use(express.static(path.join(__dirname, 'public')))
+console.log(path.join(__dirname));
+
 
 /** Parse the body of the request */
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
-
-app.get('/home', (req: Request, res: Response, next: NextFunction) => {
-  res.render('index' ,{ title: 'FotoBook' })
+//router
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
+  res.render('pages/login' ,{ title: 'FotoBook' })
 })
+app.get('/signup', (req: Request, res: Response, next: NextFunction) => {
+  res.render('pages/signup' ,{ title: 'FotoBook' })
+})
+app.get('/login', (req: Request, res: Response, next: NextFunction) => {
+  res.render('pages/login' ,{ title: 'FotoBook' })
+})
+
 
 /** Error handling */
 router.use((req, res, next) => {
@@ -73,8 +82,9 @@ router.use((req, res, next) => {
 });
 
 
-/** Routes go here */
-router.use('/api', photoRouter);
+
+app.use(router);
+app.use('/photo', photoRouter);
 
 
 app.listen(port, () => {

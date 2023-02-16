@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .bg-header{
+    background-color: #3c5999;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    }
+    @media screen and (max-width: 600px) {
+    .div_reponsive {
+    display: none !important;
+    }
+    .bg-header{
+    padding: 1rem
+    }
+    }
+    @media screen and (min-width: 1200) {
+    .bg-header{
+    padding: 0 10rem !important;
+    }
+    }
+  </style>
+</head>
+<header class="bg-header">
+  <div class="row" style="display: flex; align-items: center;">
+    <div class="col-2" style="text-align: end;"><a class="text-white" style="font-weight: 800; font-size: 18px;" href="#">Fotobook</a></div>
+    <div class="col-8">
+      <input class="form-control w-50 div_reponsive" id="search" placeholder="Search photo / albums" type="text">
+    </div>
+    <div class="col-2"><a class="text-white" href="/login"> Login</a></div>
+  </div>
+</header>
+<div class="custom row d-flex justify-content-center" style="margin-top: 4rem;">
+  <div class="col-sm-12 col-md-8 col-lg-3">
+    <h1 class="text-center login-title">Fotobook Signup</h1>
+    <div class="account-wall">
+      <form class="form-signin">
+        <div class="form-group">
+          <label for="usr">First Name:</label>
+          <input class="form-control" id="firstname" type="text" placeholder="First name" required="">
+        </div>
+        <div class="form-group">
+          <label for="usr">Last Name:</label>
+          <input class="form-control" id="lastname" type="text" required="" placeholder="Last name">
+        </div>
+        <div class="form-group">
+          <label for="usr">Email:</label>
+          <input class="form-control" type="text" placeholder="Email" required="" autofocus="">
+        </div>
+        <div class="form-group">
+          <label for="usr">New Password:</label>
+          <input class="form-control mb-4" type="password" placeholder="Password" required="">
+        </div>
+        <div class="form-group">
+          <label for="usr">Password Comfirmation:</label>
+          <input class="form-control mb-4" type="password" placeholder="Password" required="">
+        </div>
+        <button class="btn mt-2 btn-primary btn-block w-50" style="position: relative; left: 50%; transform: translateX(-50%); background-color:#3c5999" type="submit">Signup</button>
+      </form>
+    </div>
+  </div>
+</div>

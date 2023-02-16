@@ -13,16 +13,17 @@ const MONGO_OPTIONS = {
     
 };
 
-const MONGO_USERNAME = process.env.MONGO_USERNAME || 'anhnguyen1410tb';
+const MONGO_USERNAME = process.env.MONGO_USERNAME || 'hoanganh1410tb';
 const MONGO_PASSWORD = process.env.MONGO_USERNAME || '14102000k';
-const MONGO_HOST = process.env.MONGO_URL || `chatapp.0zdxuqz.mongodb.net`;
+const MONGO_HOST = process.env.MONGO_URL || `@cluster0.zm9zdne.mongodb.net`;
 
 const MONGO = {
     host: MONGO_HOST,
     password: MONGO_PASSWORD,
     username: MONGO_USERNAME,
     options: MONGO_OPTIONS,
-    url: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}`
+   // url: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}`
+    url: `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.zm9zdne.mongodb.net/?retryWrites=true&w=majority`
 };
 
 // const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';

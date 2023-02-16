@@ -1,0 +1,16 @@
+extends ../layout.pug
+
+block main
+    .container
+        .row.d-flex.justify-content-center(style='margin-top: 8rem;')
+            .col-sm-6.col-md-4.col-md-offset-4
+                h1.text-center.login-title Fotobook Login
+                .account-wall
+                    img.profile-img(src='https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120' alt='')
+                    form.form-signin(method='POST' action='https://www.google.com/')
+                        input.form-control(type='text' placeholder='Email' required='' autofocus='')
+                        input.form-control.mb-4(type='password' placeholder='Password' required='')
+                        button.btn.mt-2.btn-primary.btn-block.w-50(style='position: relative; left: 50%; transform: translateX(-50%);' type='submit') Log in
+                        a.text-center.new-account(href='#' style='color: #3c5999; font-size: 14px;') Forget password? 
+                a.text-center.new-account(href='/signup' style='color: #3c5999; font-size: 14px;') Create an account 
+    
