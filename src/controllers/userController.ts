@@ -3,36 +3,44 @@ import mongoose from 'mongoose';
 import User from '../model/user';
 
 
-// [POST] /user/register
-const createUser = (req: Request, res: Response, next: NextFunction) => {
+// [POST] /user/signup
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
     let { firstName, lastName, avatar, email, password, status, lastLogin } = req.body;
-
-    
-
-    const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        firstName,
-        lastName,
-        email,
-        password,
-        lastLogin,
-        avatar,
-        status
-    });
-
-    return user
-        .save()
-        .then((result) => {
-            return res.status(201).json({
-                user: result
-            });
-        })
-        .catch((error) => {
-            return res.status(500).json({
-                message: error.message,
-                error
-            });
+   
+    // select only the adventures name and length
+    const u = await User.findOne({ email }).exec();
+   
+    if(u){
+        return res.status(400).json({
+            message: 'User already exists'
         });
+    }else{       
+        const user = new User({
+            _id: new mongoose.Types.ObjectId(),
+            firstName,
+            lastName,
+            email,
+            password,
+            lastLogin: '',
+            avatar : "",
+            status : 1
+        });
+    
+        return user
+            .save()
+            .then((result) => {
+                res.redirect('pages/login')
+            })
+            .catch((error) => {
+                return res.status(500).json({
+                    message: error.message,
+                    error
+                });
+            });
+    }
+
+
+
 
 };
 
@@ -54,4 +62,23 @@ const getAllUser = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
-export default { createUser, getAllUser };
+const getUserByEmail = (req: Request, res: Response, next: NextFunction) => {
+    
+    const email = req.params.email
+    User.findOne({email: email})
+        .exec()
+        .then((users) => {
+            return res.status(200).json({
+                users: users,
+               
+            });
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                message: error.message,
+                error
+            });
+        });
+}
+
+export default { createUser, getAllUser, getUserByEmail };

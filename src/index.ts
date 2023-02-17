@@ -58,6 +58,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+/** Decode Form URL Encoded data */
+app.use(express.urlencoded());
 
 // //router
 // app.get('/', (req: Request, res: Response, next: NextFunction) => {
