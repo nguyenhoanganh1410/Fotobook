@@ -8,4 +8,5 @@ export default interface IUser extends Document {
     password:string;
     status: boolean;
     lastLogin: Date;
+    role:string;
 }

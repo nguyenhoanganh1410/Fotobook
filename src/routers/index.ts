@@ -1,18 +1,13 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 const router = express.Router();
+import authRoute from './auth'
+import userRoute from './userRouter'
+import feedRoute from './feedRoute'
+function route(app: Express, passport : any){
 
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/login' ,{ title: 'FotoBook' })
-})
+    app.use('/', authRoute);
+    app.use('/users', userRoute);
+    app.use('/feeds', feedRoute);
+}
 
-//register page
-router.get('/signup', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/signup' ,{ title: 'FotoBook' })
-})
-
-//login page
-router.get('/login', (req: Request, res: Response, next: NextFunction) => {
-  res.render('pages/login' ,{ title: 'FotoBook' })
-})
-
-export default router;
+export default route;

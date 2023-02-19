@@ -1,0 +1,28 @@
+### check server 
+
+GET http://localhost:3000/status
+
+### login 
+
+POST http://localhost:3005/users/login
+Content-Type: application/json
+
+{
+    "username": "1@gmail.com",
+    "password": "123"
+}
+
+### 
+
+GET http://localhost:3005/feeds
+Content-Type: application/json
+
+{
+    "username": "123",
+    "password": "123"
+}
+
+
+### page profile
+
+GET http://localhost:3000/profile

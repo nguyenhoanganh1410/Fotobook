@@ -12,6 +12,7 @@ const UserSchema: Schema = new Schema(
         status: { type: Boolean, required: true },
         lastLogin: { type: Date },
         avatar: { type: String},
+        role:{type: String, require:true}
     },
     {
         timestamps: true

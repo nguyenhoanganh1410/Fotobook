@@ -1,0 +1,9 @@
+mixin headerFotoBook(user)
+  header.bg-header
+    .row(style='display: flex; align-items: center;')
+      .col-2(style='text-align: end;')
+        a.text-white.header-logo(href='#') Fotobook
+      .col-8
+        input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
+      .col-2
+        a.text-white.header-login(href='/login')  Login

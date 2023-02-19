@@ -1,26 +1,26 @@
-extends ../layout.pug
+extends ../index.pug
 
 block main
-  .custom.row.d-flex.justify-content-center(style='margin-top: 4rem; margin-left: 0; margin-right:0')
-    .col-sm-12.col-md-8.col-lg-4
-      h1.text-center.login-title Fotobook Signup
-      .account-wall
-        form.form-signin(method='POST' action='/post')
-          .form-group
-            label(for='usr') First Name:
-            input#firstname.form-control(type='text' placeholder='First name' required='')
-          .form-group
-            label(for='usr') Last Name:
-            input#lastname.form-control(type='text' required='' placeholder='Last name')
-          .form-group
-            label(for='usr') Email:
-            input.form-control(type='email' placeholder='Email' required='' autofocus='')
-          .form-group
-            label(for='usr') New Password:
-            input.form-control.mb-4(type='password' placeholder='Password' required='')
-          .form-group
-            label(for='usr') Password Comfirmation:
-            input.form-control.mb-4(type='password' placeholder='Password' required='')
-          button.btn.mt-2.btn-primary.btn-block.w-50(style='position: relative; left: 50%; transform: translateX(-50%); background-color:#3c5999' type='submit')
-            | Signup
-
+  .container
+    .row.d-flex.justify-content-center.block-register
+      .col-sm-10.col-md-8.col-lg-5.block-register-div
+        h1.text-center.login-title Fotobook Signup
+        .account-wall
+          form.form-signin(method='POST' action='/users')
+            .form-group
+              label(for='usr') First Name:
+              input#firstname.form-control(type='text' placeholder='First name' required='' autofocus='' name="firstName" )
+            .form-group
+              label(for='usr') Last Name:
+              input#lastname.form-control(type='text' required='' placeholder='Last name' name="lastName" )
+            .form-group
+              label(for='usr') Email:
+              input.form-control(type='text' placeholder='Email' required='' name="email" id="email")
+            .form-group
+              label(for='usr') New Password:
+              input.form-control.mb-4(type='password' placeholder='Password' required='' name="password" )
+            .form-group
+              label(for='usr') Password Comfirmation:
+              input.form-control.mb-4(type='password' placeholder='Password' required='' name="newPassword" )
+            button.btn.mt-2.btn-primary.btn-block.w-50(style='position: relative; left: 50%; transform: translateX(-50%); background-color:#3c5999' type='submit')
+              | Signup
