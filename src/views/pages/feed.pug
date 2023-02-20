@@ -1,0 +1,114 @@
+extends ../index.pug
+
+block main
+    +headerFotoBook(user)
+    .row.feeds-block
+        .col-md-2.d-flex.justify-content-center.block-user
+            ul.nav.flex-column.nav_custom
+                li.nav-item
+                    a.nav-link.active(href='#') My Feed
+                li.nav-item
+                    a.nav-link(href='myphoto.html') My Photos
+                li.nav-item
+                    a.nav-link(href='#') My Albums
+        .col-md-8
+            .block-content.d-flex.flex-column.justify-content-between
+                .block-content-center
+                    .d-flex.justify-content-center(style='margin-bottom: 30px')          
+                        ul.nav.nav-pills.group-tabs(role='tablist')
+                            li.nav-item.group-tabs-item
+                                a.nav-link.active(data-toggle='pill' href='#block-photos') Photo 
+                            li.nav-item.group-tabs-item
+                                a.nav-link(data-toggle='pill' href='#block-albums') Album
+                    .tab-content
+                        #block-photos.container.tab-pane.active
+                            .row
+                                .col-md-12.col-lg-6.mb-4.mb-4
+                                    .card-custom(data-toggle='modal' data-target='#modelImage')
+                                        .row
+                                            .col-sm-12.col-lg-6
+                                                img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
+                                            .col-sm-12.col-lg-6.p-3
+                                                .d-flex.flex-column.justify-content-between.h-100
+                                                    .card-content-top
+                                                        .d-flex(style='align-items: center')
+                                                            img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                                                            span.ml-2(style='\
+                                                            color: #3c5999;\
+                                                            font-weight: 700;\
+                                                            font-size: 13px;\
+                                                            text-transform: capitalize;\
+                                                            ') anh nguyen
+                                                        .card-block_content
+                                                            h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')
+                                                                | John Doe
+                                                            p.card-content
+                                                                | Lorem ipsum dolor sit amet consectetur
+                                                                | adipisicing elit. Numquam officia ad sunt ea,
+                                                                | tenetur quaerat
+                                                    .d-flex.justify-content-between
+                                                        span.like-block(style='color: #3c5999; font-size: 12px')
+                                                            i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
+                                                            | 234
+                                                        span(style='color: #bdbdbd; font-size: 12px') 20/11/2023
+
+                        #block-albums.container.tab-pane.fade
+                            .row
+                                .col-md-12.col-lg-6.mb-4.mb-4
+                                    .card-custom(data-toggle='modal' data-target='#modelImage')
+                                        .row
+                                            .col-sm-12.col-lg-6
+                                                img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
+                                            .col-sm-12.col-lg-6.p-3
+                                                .d-flex.flex-column.justify-content-between.h-100
+                                                    .card-content-top
+                                                        .d-flex(style='align-items: center')
+                                                            img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                                                            span.ml-2(style='\
+                                                            color: #3c5999;\
+                                                            font-weight: 700;\
+                                                            font-size: 13px;\
+                                                            text-transform: capitalize;\
+                                                            ') anh nguyen
+                                                        .card-block_content
+                                                            h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')
+                                                                | John Doe
+                                                            p.card-content
+                                                                | Lorem ipsum dolor sit amet consectetur
+                                                                | adipisicing elit. Numquam officia ad sunt ea,
+                                                                | tenetur quaerat
+                                                    .d-flex.justify-content-between
+                                                        span.like-block(style='color: #3c5999; font-size: 12px')
+                                                            i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
+                                                            | 234
+                                                        span(style='color: #bdbdbd; font-size: 12px') 20/11/2023
+
+                .custom-panigation
+                    ul.pagination
+                        li.page-item.disabled
+                            a.page-link(href='#') Previous
+                        li.page-item
+                            a.page-link(href='#') 1
+                        li.page-item
+                            a.page-link(href='#') 2
+                        li.page-item
+                            a.page-link(href='#') 3
+                        li.page-item
+                            a.page-link(href='#') Next
+        .col-md-2
+    
+    // The Modal
+    #modelImage.modal.fade
+        .modal-dialog.modal-dialog-centered
+            .modal-content
+                .modal-body
+                    .body-block
+                        p.block-header Nam tempor posuere faucibus
+                        .block-image
+                            img(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='image')
+                        p.block-desc
+                            | Aliquam dictum nec massa ac consequat. Etiam dignissim tincidunt
+                            | tellus sed vestibulum. Sed vitae vestibulum purus. Curabitur
+                            | malesuada libero in nibh pretium, sed malesuada nisi feugiat.
+
+
