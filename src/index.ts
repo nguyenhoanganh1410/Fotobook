@@ -15,7 +15,7 @@ dotenv.config();
 const LocalStrategy = passportLocal.Strategy;
 const app: Express = express();
 const router = express();
-const port = process.env.PORT || 8009;
+const port = process.env.PORT || 8001;
 const NAMESPACE = "Server";
 
 const store = new session.MemoryStore();
@@ -26,7 +26,7 @@ app.use(
     saveUninitialized: false,
     secret: "hoanganh",
     cookie: {
-      maxAge: 1000 * 20 * 10000, // 10s
+      maxAge: 1000 * 20 * 10000, 
     },
     store,
   })

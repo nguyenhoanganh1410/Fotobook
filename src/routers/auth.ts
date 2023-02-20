@@ -19,4 +19,16 @@ router.get("/signup", (req: Request, res: Response, next: NextFunction) => {
   res.render("pages/signup", { title: "Signup Page" });
 });
 
+//logout
+//[GET] /logout
+router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+  console.log(" user logged out");
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/login");
+  });
+});
+
 export = router;

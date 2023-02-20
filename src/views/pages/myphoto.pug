@@ -1,0 +1,53 @@
+extends ../index.pug
+
+block main
+    +headerFotoBook(user)
+    .row.feeds-block
+        .col-md-2.d-flex.justify-content-center.block-user
+            +navigation
+        .col-md-8
+            .block-content.d-flex.flex-column.justify-content-between
+                .block-content-main
+                    .d-flex.justify-content-end(style='margin-bottom: 30px; margin-right: 15px')
+                        a.btn.btn-success(href='photoadd.html' type='button') Add New photo
+                    .row
+                        .col-lg-3.mb-4.mb-4
+                            .card-custom
+                                .card_text.d-flex.justify-content-between
+                                    p(style='font-size: 13px;') s nam dias harum, animiendis...
+                                    span
+                                        i.fa.fa-pencil-square-o(aria-hidden='true')
+                                .block-content-bottom
+                                    img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
+                                span.lock-css
+                                    i.fa.fa-lock(aria-hidden='true')
+
+                .custom-panigation
+                    ul.pagination
+                        li.page-item.disabled
+                            a.page-link(href='#') Previous
+                        li.page-item
+                            a.page-link(href='#') 1
+                        li.page-item
+                            a.page-link(href='#') 2
+                        li.page-item
+                            a.page-link(href='#') 3
+                        li.page-item
+                            a.page-link(href='#') Next
+        .col-md-2
+    
+    // The Modal
+    #modelImage.modal.fade
+        .modal-dialog.modal-dialog-centered
+            .modal-content
+                .modal-body
+                    .body-block
+                        p.block-header Nam tempor posuere faucibus
+                        .block-image
+                            img(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='image')
+                        p.block-desc
+                            | Aliquam dictum nec massa ac consequat. Etiam dignissim tincidunt
+                            | tellus sed vestibulum. Sed vitae vestibulum purus. Curabitur
+                            | malesuada libero in nibh pretium, sed malesuada nisi feugiat.
+
+

@@ -20,7 +20,7 @@ const UserSchema: Schema = new Schema(
 );
 
 UserSchema.post<IUser>('save', function () {
-    logging.info('Mongo', 'Checkout the book we just saved: ', this);
+    logging.info('Mongo', 'Checkout the user: ', this);
 });
 
 export default mongoose.model<IUser>('User', UserSchema);

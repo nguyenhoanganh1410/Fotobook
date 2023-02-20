@@ -4,7 +4,7 @@ mixin headerFotoBook(user)
       header.bg-header
         .row(style='display: flex; align-items: center')
           .col-2(style='text-align: end')
-            a.text-white.header-logo(href='#') Fotobook
+            a.text-white.header-logo(href='feeds') Fotobook
           .col-8.d-flex.justify-content-between.align-items-center
             input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
             if user
@@ -35,7 +35,7 @@ mixin headerFotoBook(user)
                   .modal-footer
                       button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
                     
-                      button.btn.btn-danger(type='button' data-dismiss='modal') Yes
+                      a.btn.btn-danger(href='/logout') Yes
     else
        .row(style='display: flex; align-items: center;')
         .col-2(style='text-align: end;')
@@ -44,3 +44,14 @@ mixin headerFotoBook(user)
           input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
         .col-2
           a.text-white.header-login(href='/login')  Login
+
+
+
+mixin navigation 
+  ul.nav.flex-column.nav_custom
+    li.nav-item
+      a.nav-link.active(href='/feeds') My Feed
+    li.nav-item
+      a.nav-link(href='/photos') My Photos
+    li.nav-item
+      a.nav-link(href='/albums') My Albums
