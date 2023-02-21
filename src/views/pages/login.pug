@@ -8,7 +8,7 @@ block main
                 .account-wall
                     img.profile-img(src='https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120' alt='')
                     p.text-danger.mb-2.text-center #{message}
-                    form.form-signin(method='POST' action='/users/login')
+                    form.form-signin(method='POST' action='/login')
                         input.form-control(type='email' name='username' placeholder='Email' required='' autofocus='')
                         input.form-control.mb-4(type='password' name='password' placeholder='Password' required='')
                         button.btn.mt-2.btn-primary.btn-block.w-50(style='position: relative; left: 50%; transform: translateX(-50%);' type='submit')
