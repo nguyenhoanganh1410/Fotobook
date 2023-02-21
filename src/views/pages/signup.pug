@@ -6,21 +6,116 @@ block main
       .col-sm-10.col-md-8.col-lg-5.block-register-div
         h1.text-center.login-title Fotobook Signup
         .account-wall
-          form.form-signin(method='POST' action='/users')
+          form#form.form-signin(method='POST' action='/users')
             .form-group
               label(for='usr') First Name:
-              input#firstname.form-control(type='text' placeholder='First name' required='' autofocus='' name="firstName" )
+              span#erro_firstname(style='color: red')
+                | **Maximum 25 characters
+              input#firstname.form-control(type='text' placeholder='First name' required='' name="firstName")
             .form-group
               label(for='usr') Last Name:
-              input#lastname.form-control(type='text' required='' placeholder='Last name' name="lastName" )
+              span#erro_lastname(style='color: red')
+                | **Maximum 25 characters
+              input#lastname.form-control(type='text' required='' placeholder='Last name' name="lastName")
             .form-group
               label(for='usr') Email:
-              input.form-control(type='text' placeholder='Email' required='' name="email" id="email")
+              input#email.form-control(type='email' placeholder='Email' required='' autofocus='' name="email")
             .form-group
               label(for='usr') New Password:
-              input.form-control.mb-4(type='password' placeholder='Password' required='' name="password" )
+              span#erro_password(style='color: red')
+                | **Maximum 64 characters
+              input#password.form-control.mb-4(type='password' placeholder='Password' required='' name="password")
             .form-group
               label(for='usr') Password Comfirmation:
-              input.form-control.mb-4(type='password' placeholder='Password' required='' name="newPassword" )
-            button.btn.mt-2.btn-primary.btn-block.w-50(style='position: relative; left: 50%; transform: translateX(-50%); background-color:#3c5999' type='submit')
+              span#erro_password_comfi(style='color: red')
+                | **Maximum 64 characters
+              input#password_comfi.form-control.mb-4(type='password' placeholder='Password' required='' name="newPassword")
+            button#submitBtn.btn.mt-2.btn-primary.btn-block.w-50(style='\
+            position: relative;\
+            left: 50%;\
+            transform: translateX(-50%);\
+            background-color: #3c5999;\
+            ' type='submit')
               | Signup
+  script.
+    $(document).ready(function(){
+        $("#erro_firstname").hide();
+        let usernameError = true;
+        $("#firstname").keyup(function () {
+        validateFirstname();
+        });
+        function validateFirstname() {
+        let usernameValue = $("#firstname").val();
+        if (usernameValue.length > 25) {
+        $("#erro_firstname").show();
+        usernameError = false;
+        return false;
+        } else {
+        $("#erro_firstname").hide();
+        return true;
+        }
+        }
+        // Validate last name
+        $("#erro_lastname").hide();
+        let lastNameErro = true;
+        $("#lastname").keyup(function () {
+        validateLastname();
+        });
+        function validateLastname() {
+        let usernameValue = $("#lastname").val();
+        if (usernameValue.length > 25) {
+        $("#erro_lastname").show();
+        usernameError = false;
+        return false;
+        } else {
+        $("#erro_lastname").hide();
+        return true;
+        }
+        }
+        // Validate Password
+        $("#erro_password").hide();
+        $("#password").keyup(function () {
+        validatePassword();
+        });
+        function validatePassword() {
+        let passwordValue = $("#password").val();
+        if (passwordValue.length > 64) {
+        $("#erro_password").show();
+        return false;
+        } else {
+        $("#erro_password").hide();
+        return true;
+        }
+        }
+        // Validate Confirm Password
+        $("#erro_password_comfi").hide();
+        $("#password_comfi").blur(function () {
+        validateConfirmPassword();
+        });
+        function validateConfirmPassword() {
+        let confirmPasswordValue = $("#password_comfi").val();
+        let passwordValue = $("#password").val();
+        if (passwordValue != confirmPasswordValue) {
+        $("#erro_password_comfi").show();
+        $("#erro_password_comfi").html("**Password didn't Match");
+        return false;
+        } else {
+        $("#erro_password_comfi").hide();
+        return true;
+        }
+        }
+        // Submit button
+        $("#submitBtn").click(function () {
+        if (
+        validateConfirmPassword() &&
+        validateFirstname() &&
+        validateLastname() &&
+        validatePassword() 
+        ) {
+        return true;
+        }
+        return false;
+        });
+    });
+   
+  

@@ -1,8 +1,6 @@
+import { log } from "console";
 import { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
-
 import Photo from "../model/photo";
-import mutipleMongooseToObject from "../utils/mongoose";
 interface Query {
   page: string;
   limit: string;
@@ -27,18 +25,17 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
 
       // console.log(list);
       // console.log(typeof list);
+      const newList = list.map((photo) => {
+        return photo.toObject();
+      });
+
+      console.log(newList);
 
       const listRoot = await Photo.find().exec();
-      // return res.status(200).json({
-      //   photos: list,
-      //   count: list.length,
-      //   currentPage: newPage,
-      //   totalPage: Math.ceil(listRoot.length / newLimit),
-      // });
       res.render("pages/feed", {
         title: "FotoBook",
         user: req.user,
-        data: mutipleMongooseToObject,
+        data: newList,
         currentPage: newPage,
         totalPage: Math.ceil(listRoot.length / newLimit),
       });

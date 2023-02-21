@@ -50,7 +50,7 @@ mixin headerFotoBook(user)
 mixin navigation 
   ul.nav.flex-column.nav_custom
     li.nav-item
-      a.nav-link.active(href='/feeds') My Feed
+      a.nav-link.active(href='/feeds?type=photo&page=1&limit=4') My Feed
     li.nav-item
       a.nav-link(href='/photos') My Photos
     li.nav-item
@@ -58,17 +58,17 @@ mixin navigation
 
 
 
-mixin cardPhoto(photo)
+mixin cardPhoto(title, desc, image, createdAt, like)
   .col-md-12.col-lg-6.mb-4.mb-4
     .card-custom(data-toggle='modal' data-target='#modelImage')
       .row
         .col-sm-12.col-lg-6
-          img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
+          img.card-img-top(src=image alt='Card image')
         .col-sm-12.col-lg-6.p-3
           .d-flex.flex-column.justify-content-between.h-100
             .card-content-top
               .d-flex(style='align-items: center')
-                img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                img.rounded-circle(src=image alt='Rounded Image' style='width: 30px; height: 30px')
                 span.ml-2(style='\
                 color: #3c5999;\
                 font-weight: 500;\
@@ -76,10 +76,10 @@ mixin cardPhoto(photo)
                 text-transform: capitalize;\
                 ') anh nguyen
               .card-block_content
-                h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')= photo.title
-                p.card-content= photo.desc
+                h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')=title
+                p.card-content=desc
             .d-flex.justify-content-between
               span.like-block(style='color: #3c5999; font-size: 12px')
-                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
-                | 123
-              span(style='color: #bdbdbd; font-size: 12px') #{photo.createAt}
+                i.ml-1.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')= like.length
+              
+              span(style='color: #bdbdbd; font-size: 12px')=createAt

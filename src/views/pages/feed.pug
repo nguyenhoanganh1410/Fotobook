@@ -18,7 +18,7 @@ block main
                         #block-photos.container.tab-pane.active
                             .row
                                 each photo in data
-                                    +cardPhoto(photo)
+                                    +cardPhoto(photo.title, photo.desc, photo.image, photo.createdAt, photo.like)
                         #block-albums.container.tab-pane.fade
                             .row
                                 .col-md-12.col-lg-6.mb-4.mb-4
@@ -79,3 +79,9 @@ block main
                             | malesuada libero in nibh pretium, sed malesuada nisi feugiat.
 
 
+    script.
+        $(document).ready(function(){
+            $(".card-custom").click(function(){
+            $(".block-image").attr("src", "images/card-front.jpg");
+        });
+        });

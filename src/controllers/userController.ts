@@ -58,29 +58,5 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
     }
    
 };
-// [POST] /users/login
-const login = async (req: Request, res: Response, next: NextFunction) => {
-    return res.json(req.body)
-    
-    // let { email, password} = req.body;
-    //     // select user by email
-    //     const u = await User.findOne({ email }).exec();
-   
-    //     if(u){
-           
-    //         //check password
-            // if(bcrypt.compareSync(password, u.password)){
-        
-            //     return res.json(u)
-            // }else{
-            //     return res.json({message:"email or password is not correct!"});
-            // }
 
-    //     }
-     
-    //     return res.json({message:"email or password is not correct!"});
-    
-    
-}
-
-export default { createUser, getAllUser, login };
+export default { createUser, getAllUser };
