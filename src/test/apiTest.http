@@ -26,3 +26,22 @@ Content-Type: application/json
 ### page profile
 
 GET http://localhost:3000/profile
+
+
+
+### photos 
+
+POST http://localhost:8000/photos
+Content-Type: application/json
+
+{
+    "title": "Cat here 456",
+    "desc": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam officia ad sunt ea, tenetur quaerat",
+    "image": "https://tse1.mm.bing.net/th?id=OIP.kccwwN3tMbkP5qeHrnHNUwHaEK&pid=Api&P=0",
+    "status":1,
+    "userEmail":"2@gmail.com"
+}
+
+### get all photos
+
+GET http://localhost:8001/photos/list?limit=1

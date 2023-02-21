@@ -34,8 +34,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 /** Connect to Mongo */
 mongoose
@@ -90,7 +89,7 @@ router.use((req, res, next) => {
 });
 
 // init route
-route(app, passport);
+route(app);
 
 authenticateUser(passport);
 

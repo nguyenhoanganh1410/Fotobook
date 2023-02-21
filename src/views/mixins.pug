@@ -1,43 +1,43 @@
 mixin headerFotoBook(user)
-  header.bg-header
-    if user
-      header.bg-header
-        .row(style='display: flex; align-items: center')
-          .col-2(style='text-align: end')
-            a.text-white.header-logo(href='feeds') Fotobook
-          .col-8.d-flex.justify-content-between.align-items-center
-            input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
-            if user
-            .d-flex.block-user(style='align-items: center; cursor: pointer')
-              img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
-              span.ml-2(style='\
-              color: #f8f8f8;\
-              font-weight: 700;\
-              font-size: 13;\
-              text-transform: capitalize;\
-              ') #{user.firstName + " " + user.lastName}
-          .col-2.login_text 
-            a.text-white.logout_text.header-login(href='#' data-toggle='modal' data-target='#myModal')
-              | Logout
+  if user
+    header.bg-header
+      .row(style='display: flex; align-items: center')
+        .col-2(style='text-align: end')
+          a.text-white.header-logo(href='feeds') Fotobook
+        .col-8.d-flex.justify-content-between.align-items-center
+          input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
+          if user
+          .d-flex.block-user(style='align-items: center; cursor: pointer')
+            img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+            span.ml-2(style='\
+            color: #f8f8f8;\
+            font-weight: 700;\
+            font-size: 13;\
+            text-transform: capitalize;\
+            ') #{user.firstName + " " + user.lastName}
+        .col-2.login_text 
+          a.text-white.logout_text.header-login(href='#' data-toggle='modal' data-target='#myModal')
+            | Logout
 
-          // The Modal
-      #myModal.modal.fade
-          .modal-dialog.modal-dialog-centered
-              .modal-content
-                  // Modal Header
-                  .modal-header
-                      h4.modal-title Logout
-                      button.close(type='button' data-dismiss='modal')
-                      | &times;
-                  // Modal body
-                  .modal-body Do you want to logout?
-                  // Modal footer
-                  .modal-footer
-                      button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
-                    
-                      a.btn.btn-danger(href='/logout') Yes
-    else
-       .row(style='display: flex; align-items: center;')
+        // The Modal
+    #myModal.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Logout
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to logout?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            a.btn.btn-danger(href='/logout') Yes
+  else
+    header.bg-header
+      .row(style='display: flex; align-items: center;')
         .col-2(style='text-align: end;')
           a.text-white.header-logo(href='#') Fotobook
         .col-8
@@ -55,3 +55,31 @@ mixin navigation
       a.nav-link(href='/photos') My Photos
     li.nav-item
       a.nav-link(href='/albums') My Albums
+
+
+
+mixin cardPhoto(photo)
+  .col-md-12.col-lg-6.mb-4.mb-4
+    .card-custom(data-toggle='modal' data-target='#modelImage')
+      .row
+        .col-sm-12.col-lg-6
+          img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
+        .col-sm-12.col-lg-6.p-3
+          .d-flex.flex-column.justify-content-between.h-100
+            .card-content-top
+              .d-flex(style='align-items: center')
+                img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                span.ml-2(style='\
+                color: #3c5999;\
+                font-weight: 500;\
+                font-size: 13px;\
+                text-transform: capitalize;\
+                ') anh nguyen
+              .card-block_content
+                h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')= photo.title
+                p.card-content= photo.desc
+            .d-flex.justify-content-between
+              span.like-block(style='color: #3c5999; font-size: 12px')
+                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
+                | 123
+              span(style='color: #bdbdbd; font-size: 12px') #{photo.createAt}

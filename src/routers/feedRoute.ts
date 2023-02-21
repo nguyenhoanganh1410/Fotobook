@@ -1,17 +1,25 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import passport from "passport";
+import feedController from "../controllers/feedController";
+import photoController from "../controllers/photoController";
+import IUser from "../interface/user";
 const router = express.Router();
 
 // [GET] /feeds/
-// home page - authorized
+
+//check authorized
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
-    console.log("user" + req.user);
-    res.render("pages/feed", { title: "FotoBook", user: req.user });
+    const { user } = req;
+
+    if ((user as IUser).role === "admin") {
+      res.send("admin page");
+    }
+    next();
   } else {
     res.redirect("/login");
-    // res.render('pages/login' ,{ title: 'FotoBook Login' })
   }
 });
+router.get("/", feedController.getData);
 
 export = router;

@@ -3,9 +3,9 @@ extends ../index.pug
 block main
     +headerFotoBook(user)
     .row.feeds-block
-        .col-md-2.d-flex.justify-content-center.block-user
-           +navigation
-        .col-md-8
+        .col-md-1.col-lg-2.d-flex.justify-content-center.block-user
+            +navigation
+        .col-md-10.col-lg-8
             .block-content.d-flex.flex-column.justify-content-between
                 .block-content-center
                     .d-flex.justify-content-center(style='margin-bottom: 30px')          
@@ -17,35 +17,8 @@ block main
                     .tab-content
                         #block-photos.container.tab-pane.active
                             .row
-                                .col-md-12.col-lg-6.mb-4.mb-4
-                                    .card-custom(data-toggle='modal' data-target='#modelImage')
-                                        .row
-                                            .col-sm-12.col-lg-6
-                                                img.card-img-top(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Card image')
-                                            .col-sm-12.col-lg-6.p-3
-                                                .d-flex.flex-column.justify-content-between.h-100
-                                                    .card-content-top
-                                                        .d-flex(style='align-items: center')
-                                                            img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
-                                                            span.ml-2(style='\
-                                                            color: #3c5999;\
-                                                            font-weight: 700;\
-                                                            font-size: 13px;\
-                                                            text-transform: capitalize;\
-                                                            ') anh nguyen
-                                                        .card-block_content
-                                                            h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')
-                                                                | John Doe
-                                                            p.card-content
-                                                                | Lorem ipsum dolor sit amet consectetur
-                                                                | adipisicing elit. Numquam officia ad sunt ea,
-                                                                | tenetur quaerat
-                                                    .d-flex.justify-content-between
-                                                        span.like-block(style='color: #3c5999; font-size: 12px')
-                                                            i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
-                                                            | 234
-                                                        span(style='color: #bdbdbd; font-size: 12px') 20/11/2023
-
+                                each photo in data
+                                    +cardPhoto(photo)
                         #block-albums.container.tab-pane.fade
                             .row
                                 .col-md-12.col-lg-6.mb-4.mb-4
@@ -89,8 +62,8 @@ block main
                             a.page-link(href='#') 3
                         li.page-item
                             a.page-link(href='#') Next
-        .col-md-2
-    
+        .col-md-1.col-lg-2
+
     // The Modal
     #modelImage.modal.fade
         .modal-dialog.modal-dialog-centered

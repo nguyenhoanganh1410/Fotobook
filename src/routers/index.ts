@@ -4,7 +4,7 @@ import authRoute from "./auth";
 import userRoute from "./userRouter";
 import feedRoute from "./feedRoute";
 import photoRoute from "./photoRouter";
-function route(app: Express, passport: any) {
+function route(app: Express) {
   app.use("/", authRoute);
   app.use("/users", userRoute);
   app.use("/feeds", feedRoute);
