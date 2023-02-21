@@ -72,7 +72,7 @@ block main
                     .body-block
                         p.block-header Nam tempor posuere faucibus
                         .block-image
-                            img(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='image')
+                            img.model-img(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='image')
                         p.block-desc
                             | Aliquam dictum nec massa ac consequat. Etiam dignissim tincidunt
                             | tellus sed vestibulum. Sed vitae vestibulum purus. Curabitur
@@ -82,6 +82,12 @@ block main
     script.
         $(document).ready(function(){
             $(".card-custom").click(function(){
-            $(".block-image").attr("src", "images/card-front.jpg");
-        });
+                var urlImage = $(this).data('img')
+                var title = $(this).data('title')
+                var desc = $(this).data('desc')
+
+                $(".model-img").attr("src", urlImage);
+                $(".block-header").text(title)
+                $(".block-desc").text(desc)
+            });
         });

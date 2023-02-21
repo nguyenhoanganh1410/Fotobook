@@ -60,7 +60,7 @@ mixin navigation
 
 mixin cardPhoto(title, desc, image, createdAt, like)
   .col-md-12.col-lg-6.mb-4.mb-4
-    .card-custom(data-toggle='modal' data-target='#modelImage')
+    .card-custom(data-toggle='modal' data-title=title data-desc=desc data-img=image data-target='#modelImage')
       .row
         .col-sm-12.col-lg-6
           img.card-img-top(src=image alt='Card image')
@@ -77,9 +77,12 @@ mixin cardPhoto(title, desc, image, createdAt, like)
                 ') anh nguyen
               .card-block_content
                 h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')=title
-                p.card-content=desc
+                if desc.length > 100
+                  p.card-content= desc.substring(0,100) + "..." 
+                else 
+                  p.card-content=desc
             .d-flex.justify-content-between
               span.like-block(style='color: #3c5999; font-size: 12px')
-                i.ml-1.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')= like.length
-              
-              span(style='color: #bdbdbd; font-size: 12px')=createAt
+                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')= like.length
+
+              span(style='color: #bdbdbd; font-size: 12px') #{createdAt.getDate()  + "-" + (createdAt.getMonth()+1) + "-" + createdAt.getFullYear() + " " + createdAt.getHours() + ":" + createdAt.getMinutes()}

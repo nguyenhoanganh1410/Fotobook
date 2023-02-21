@@ -5,10 +5,10 @@ import userRoute from "./userRouter";
 import feedRoute from "./feedRoute";
 import photoRoute from "./photoRouter";
 function route(app: Express) {
-  app.use("/", authRoute);
   app.use("/users", userRoute);
   app.use("/feeds", feedRoute);
   app.use("/photos", photoRoute);
+  app.use("/", authRoute);
 }
 
 export default route;

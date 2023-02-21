@@ -42,7 +42,6 @@ const getAllPhoto = async (req: Request, res: Response, next: NextFunction) => {
 // [POST] /photos/
 const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
   let { image, desc, title, status, userEmail } = req.body;
-  console.log(req.body);
 
   const photo = new Photo({
     _id: new mongoose.Types.ObjectId(),

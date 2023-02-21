@@ -23,13 +23,9 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
         .limit(newLimit)
         .exec();
 
-      // console.log(list);
-      // console.log(typeof list);
       const newList = list.map((photo) => {
         return photo.toObject();
       });
-
-      console.log(newList);
 
       const listRoot = await Photo.find().exec();
       res.render("pages/feed", {
@@ -42,7 +38,6 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
     } catch (error: any) {
       return res.status(500).json({
         message: "erro",
-        //error
       });
     }
   }

@@ -6,7 +6,6 @@ import IUser from "../interface/user";
 const router = express.Router();
 
 // [GET] /feeds/
-
 //check authorized
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
