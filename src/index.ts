@@ -10,6 +10,7 @@ import passport from "passport";
 import session from "express-session";
 import authenticateUser from "./service/passport";
 import passportLocal from "passport-local";
+import morgan from "morgan";
 
 dotenv.config();
 const LocalStrategy = passportLocal.Strategy;
@@ -48,24 +49,7 @@ mongoose
     logging.error(NAMESPACE, error.message, error);
   });
 
-/** Log the request */
-router.use((req, res, next) => {
-  /** Log the req */
-  logging.info(
-    NAMESPACE,
-    `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
-  );
 
-  res.on("finish", () => {
-    /** Log the res */
-    logging.info(
-      NAMESPACE,
-      `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`
-    );
-  });
-
-  next();
-});
 
 // pug config
 app.set("view engine", "pug");
@@ -75,6 +59,8 @@ app.set("views", `${__dirname}/views`);
 app.use(express.static(path.join(__dirname, "public")));
 //express > 4.16
 app.use(express.json());
+
+app.use(morgan("combined"));
 
 /** Parse the body of the request */
 app.use(bodyParser.urlencoded({ extended: true }));
