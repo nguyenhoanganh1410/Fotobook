@@ -3,10 +3,10 @@ import passport from "passport";
 import controller from "../controllers/userController";
 const router = express.Router();
 
-//get all user
+// [GET] /users # get users
 router.get("/", controller.getAllUser);
 
-//signup
+//[Post] /users/ #create a new user
 router.post("/", controller.createUser);
 
 export = router;

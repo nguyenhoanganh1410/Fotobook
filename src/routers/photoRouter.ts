@@ -2,17 +2,17 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import passport from "passport";
 const router = express.Router();
 import photoController from "../controllers/photoController";
+import { authUser } from "../middleware/auth";
 
-// [GET] /photos/
-// my photo page - authorized
-router.get("/", (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    console.log("user" + req.user);
-    res.render("pages/myphoto", { title: "My Photo", user: req.user });
-  } else {
-    res.redirect("/login");
-  }
-});
+// [GET] /photos/ #get photos by email
+router.get("/", photoController.getPhotoByEmail);
+
+// [GET] /photos/add #redict add my photo page
+router.get("/add-photo", authUser ,photoController.goToAddPage);
+
 router.get("/list", photoController.getAllPhoto);
-router.post("/", photoController.createPhoto);
+
+// [POST] /photos/ #add photo
+router.post("/add", photoController.createPhoto);
+
 export default router;

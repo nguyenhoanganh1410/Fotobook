@@ -1,50 +1,82 @@
 .card_text {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    opacity: 0.6;
-    color: white;
-    padding: 4px;
-  }
-  .card_text p {
-    text-transform: capitalize;
-  }
-  .card_text span {
-    font-weight: bold;
-    font-size: 18px;
-  }
-  .card-custom p {
-    margin: 0;
-  }
-  .card-custom img {
-    /* border-top-left-radius: 4px;
-      border-top-right-radius: 4px; */
-  }
-  .card-custom .lock-css {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-  }
-  
-  /* photo add */
-  .add-title {
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 18px;
-    color: #000000;
-  }
-  
-  .myphoto-block {
-    background-color: #f8f8f8;
-    padding: 2rem 0;
-  }
-  
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0.6;
+  color: white;
+  padding: 4px;
+  align-items: center;
+}
+.card_text p {
+  font-size: 13px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: white;
+  padding: 0 4px;
+}
+.card_text p::first-letter {
+  text-transform: uppercase;
+}
+.card_text span {
+  font-weight: bold;
+  font-size: 18px;
+}
+.card-custom p {
+  margin: 0;
+}
+.card-custom img {
+  /* border-top-left-radius: 4px;
+    border-top-right-radius: 4px; */
+}
+.card-custom .lock-css {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* photo add */
+.add-title {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.myphoto-block {
+  background-color: #f8f8f8;
+  padding: 2rem 0;
+}
+
+/* css for photoadd */
+.block-file {
+  width: 100%;
+  height: 250px;
+  border: 1px dotted gray;
+  position: relative;
+}
+
+.block-file img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.span-plussicon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  color: #93b5c6;
+}
