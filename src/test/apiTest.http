@@ -44,4 +44,4 @@ Content-Type: application/json
 
 ### get all photos
 
-GET http://localhost:8000/photos/
+GET http://localhost:8000/photos/list

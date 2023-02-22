@@ -52,7 +52,7 @@ mixin navigation
     li.nav-item
       a.nav-link.active(href='/feeds?type=photo&page=1&limit=4') My Feed
     li.nav-item
-      a.nav-link(href='/photos?page=1&limit=20') My Photos
+      a.nav-link(href='me/photos?page=1&limit=20') My Photos
     li.nav-item
       a.nav-link(href='/albums') My Albums
 
@@ -88,14 +88,15 @@ mixin cardPhoto(title, desc, image, createdAt, like)
               span(style='color: #bdbdbd; font-size: 12px') #{createdAt.getDate()  + "-" + (createdAt.getMonth()+1) + "-" + createdAt.getFullYear() + " " + createdAt.getHours() + ":" + createdAt.getMinutes()}
 
 
-mixin myPhotoCard(image, title, status)
+mixin myPhotoCard(image, title, status, _id)
   .card-custom
-    .card_text.d-flex.justify-content-between
-      p.text-content= title                              
-      span
-          i.fa.fa-pencil-square-o(aria-hidden='true')
-    .block-content-bottom
-      img.card-img-top(src= image alt='Card image')
-    if(status == false)
-      span.lock-css
-        i.fa.fa-lock(aria-hidden='true')
+    a(href="/me/photo/" + _id +  "/edit")
+      .card_text.d-flex.justify-content-between
+        p.text-content= title                              
+        span
+            i.fa.fa-pencil-square-o(aria-hidden='true')
+      .block-content-bottom
+        img.card-img-top(src= image alt='Card image')
+      if(status == false)
+        span.lock-css
+          i.fa.fa-lock(aria-hidden='true')

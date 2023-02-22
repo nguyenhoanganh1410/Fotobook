@@ -9,11 +9,11 @@ block main
             .block-content.d-flex.justify-content-between.flex-column
                 .block-content-main
                     .d-flex.justify-content-end(style='margin-bottom: 30px; margin-right: 15px')
-                        a.btn.btn-success(href='/photos/add' type='button') Add New Photo
+                        a.btn.btn-success(href='/me/photo/add-photo' type='button') Add New Photo
                     .row
                         each photo in data
                             .col-sm-6.col-md-4.col-lg-4.col-xl-3.mb-4
-                                +myPhotoCard(photo.image, photo.title, photo.status)
+                                +myPhotoCard(photo.image, photo.title, photo.status, photo._id)
             
                 .custom-panigation
                     ul.pagination

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-
+import { ObjectId } from "mongodb";
 import Photo from "../model/photo";
 import IUser from "../interface/user";
 interface Query {
@@ -8,7 +8,7 @@ interface Query {
   limit: string;
 }
 
-// [GET] /photos/list?page=1&limit=3
+// [GET] #get all photos
 const getAllPhoto = async (req: Request, res: Response, next: NextFunction) => {
   const { page, limit } = req.query as unknown as Query;
 
@@ -39,7 +39,7 @@ const getAllPhoto = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// [POST] /photos/
+// [POST] #create a new photo
 const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
   let { image, desc, title, status, userEmail } = req.body;
 
@@ -65,7 +65,7 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-// [GET] /photos/list?page=1&limit=20
+// [GET] #get photos by email
 const getPhotoByEmail = async (
   req: Request,
   res: Response,
@@ -88,6 +88,8 @@ const getPhotoByEmail = async (
         const objectlist = list.map((photo) => {
           return photo.toObject();
         });
+        console.log(objectlist);
+
         const listRoot = await Photo.find().exec();
 
         res.render("pages/myphoto", {
@@ -104,17 +106,42 @@ const getPhotoByEmail = async (
         });
       }
     }
-
-    //res.render("pages/myphoto", { title: "My Photo", user: req.user });
   } else {
     res.redirect("/login");
   }
 };
 
+// #redirect add photo page
 const goToAddPage = (req: Request, res: Response, next: NextFunction) => {
-  console.log("add");
-
-  return res.send("add page");
+  res.render("pages/addmyphoto", {
+    title: "Add Photo",
+    user: req.user,
+  });
 };
 
-export default { getAllPhoto, createPhoto, getPhotoByEmail, goToAddPage };
+// #redirect edit photo page
+const goToEditPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  
+
+  // get photo by id
+  const photo = await Photo.findById(new ObjectId(req.params.id)).exec();
+ 
+  res.render("pages/addmyphoto", {
+    title: "Edit Photo",
+    user: req.user,
+    status: true,
+    photo
+  });
+};
+
+export default {
+  getAllPhoto,
+  createPhoto,
+  getPhotoByEmail,
+  goToAddPage,
+  goToEditPage,
+};
