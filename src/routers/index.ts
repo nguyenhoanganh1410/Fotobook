@@ -5,6 +5,7 @@ import feedRoute from "./feedRoute";
 import photoRoute from "./photoRouter";
 import meRoute from "./me/meRouter";
 import { authUser } from "../middleware/auth";
+
 const router = express.Router();
 
 function route(app: Express) {

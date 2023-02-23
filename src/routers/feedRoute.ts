@@ -5,8 +5,7 @@ import photoController from "../controllers/photoController";
 import IUser from "../interface/user";
 const router = express.Router();
 
-// [GET] /feeds/
-//check authorized
+// [GET] /feeds/ # isAuthenticated? if user is admin -> go to admin page
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
     const { user } = req;
@@ -19,6 +18,8 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.redirect("/login");
   }
 });
+
+// [GET] /feeds/ #go to feed page (usesr role)
 router.get("/", feedController.getData);
 
 export = router;

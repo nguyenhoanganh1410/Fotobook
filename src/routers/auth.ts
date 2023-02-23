@@ -12,14 +12,17 @@ const router = express.Router();
 //      }), (req: Request, res: Response, next: NextFunction) => {
 //     res.send("home page")
 // })
+
+//[GET] /login # go to login page
 router.get("/login", (req: Request, res: Response, next: NextFunction) => {
   res.render("pages/login", { title: "Login Page" });
 });
+
+//[get] /signup # go to signup page
 router.get("/signup", (req: Request, res: Response, next: NextFunction) => {
   res.render("pages/signup", { title: "Signup Page" });
 });
 
-//logout
 //[GET] /logout
 router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
   console.log(" user logged out");
@@ -30,7 +33,6 @@ router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
     res.redirect("/login");
   });
 });
-
 
 // [post] /login
 router.post("/login", function (req, res, next) {
@@ -51,4 +53,7 @@ router.post("/login", function (req, res, next) {
     });
   })(req, res, next);
 });
+
+
+
 export = router;

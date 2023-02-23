@@ -1,6 +1,6 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import photoController from "../../controllers/photoController";
-import { authUser } from "../../middleware/auth";
+
 
 const router = express.Router();
 

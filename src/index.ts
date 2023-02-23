@@ -11,8 +11,10 @@ import session from "express-session";
 import authenticateUser from "./service/passport";
 import passportLocal from "passport-local";
 import morgan from "morgan";
+import multer from 'multer';
 
 dotenv.config();
+
 const LocalStrategy = passportLocal.Strategy;
 const app: Express = express();
 const router = express();
@@ -64,9 +66,26 @@ app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /** Error handling */
-router.use((req, res, next) => {
-  const error = new Error("Not found");
+app.use((error : Error, req : Request, res : Response, next : NextFunction) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        message: "file is too large",
+      });
+    }
 
+    if (error.code === "LIMIT_FILE_COUNT") {
+      return res.status(400).json({
+        message: "File limit reached",
+      });
+    }
+
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.status(400).json({
+        message: "File must be an image",
+      });
+    }
+  }
   res.status(404).json({
     message: error.message,
   });

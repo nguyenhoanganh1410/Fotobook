@@ -8,7 +8,7 @@ mixin headerFotoBook(user)
           input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
           if user
           .d-flex.block-user(style='align-items: center; cursor: pointer')
-            img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+            img.rounded-circle(src='https://aws-s3-fotoapp-nodejs.s3.ap-southeast-1.amazonaws.com/download.jpeg' alt='Rounded Image' style='width: 30px; height: 30px')
             span.ml-2(style='\
             color: #f8f8f8;\
             font-weight: 700;\
@@ -52,7 +52,7 @@ mixin navigation
     li.nav-item
       a.nav-link.active(href='/feeds?type=photo&page=1&limit=4') My Feed
     li.nav-item
-      a.nav-link(href='me/photos?page=1&limit=20') My Photos
+      a.nav-link(href='/me/photos?page=1&limit=20') My Photos
     li.nav-item
       a.nav-link(href='/albums') My Albums
 

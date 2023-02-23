@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import Photo from "../model/photo";
 import IUser from "../interface/user";
+import { S3 } from "aws-sdk";
+import initBucket from "../service/initBucket";
+import { uploadToS3 } from "../service/uploadToS3";
+
 interface Query {
   page: string;
   limit: string;
@@ -41,28 +45,45 @@ const getAllPhoto = async (req: Request, res: Response, next: NextFunction) => {
 
 // [POST] #create a new photo
 const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
-  let { image, desc, title, status, userEmail } = req.body;
+  let { desc, title, status } = req.body;
+  const { user } = req;
 
-  const photo = new Photo({
-    _id: new mongoose.Types.ObjectId(),
-    status,
-    image,
-    desc,
-    title,
-    userEmail,
+  const s3 = new S3({
+    accessKeyId:process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   });
 
-  return photo
-    .save()
-    .then((result) => {
-      res.json({ result });
-    })
-    .catch((error) => {
-      return res.status(500).json({
-        message: error.message,
-        error,
-      });
+  // Initialize bucket
+  await initBucket(s3);
+
+  const uplaodRes = await uploadToS3(s3, req.file);
+
+  //if upload image to s3 is success
+  if (uplaodRes.success) {
+    const photo = new Photo({
+      _id: new mongoose.Types.ObjectId(),
+      status,
+      image : uplaodRes.data,
+      desc,
+      title,
+      userEmail : (user as IUser).email,
     });
+
+    return photo
+          .save()
+          .then((result) => {
+              res.redirect('/me/photos?page=1&limit=20')
+          })
+          .catch((error) => {
+              return res.status(500).json({
+                  message: error.message,
+                  error
+              });
+          });
+  } else {
+    res.json({sttaus: false, message: "upload image failed"});
+  }
+
 };
 
 // [GET] #get photos by email
