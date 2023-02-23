@@ -11,14 +11,15 @@ import session from "express-session";
 import authenticateUser from "./service/passport";
 import passportLocal from "passport-local";
 import morgan from "morgan";
-import multer from 'multer';
+import multer from "multer";
+var methodOverride = require("method-override");
 
 dotenv.config();
 
 const LocalStrategy = passportLocal.Strategy;
 const app: Express = express();
 const router = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8004;
 const NAMESPACE = "Server";
 
 const store = new session.MemoryStore();
@@ -49,8 +50,6 @@ mongoose
     logging.error(NAMESPACE, error.message, error);
   });
 
-
-
 // pug config
 app.set("view engine", "pug");
 app.set("views", `${__dirname}/views`);
@@ -60,13 +59,16 @@ app.use(express.static(path.join(__dirname, "public")));
 //express > 4.16
 app.use(express.json());
 
+// override with POST having ?_method=PUT
+app.use(methodOverride("_method"));
+
 app.use(morgan("combined"));
 
 /** Parse the body of the request */
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /** Error handling */
-app.use((error : Error, req : Request, res : Response, next : NextFunction) => {
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({

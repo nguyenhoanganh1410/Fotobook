@@ -49,7 +49,7 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
 
   const s3 = new S3({
-    accessKeyId:process.env.AWS_ACCESS_KEY_ID,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   });
 
@@ -63,27 +63,78 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
     const photo = new Photo({
       _id: new mongoose.Types.ObjectId(),
       status,
-      image : uplaodRes.data,
+      image: uplaodRes.data,
       desc,
+      deleted: false,
       title,
-      userEmail : (user as IUser).email,
+      userEmail: (user as IUser).email,
     });
 
     return photo
-          .save()
-          .then((result) => {
-              res.redirect('/me/photos?page=1&limit=20')
-          })
-          .catch((error) => {
-              return res.status(500).json({
-                  message: error.message,
-                  error
-              });
-          });
+      .save()
+      .then((result) => {
+        res.redirect("/me/photos?page=1&limit=20");
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          message: error.message,
+          error,
+        });
+      });
   } else {
-    res.json({sttaus: false, message: "upload image failed"});
+    res.json({ sttaus: false, message: "upload image failed" });
+  }
+};
+
+// [POST] #create a new photo
+const updatePhoto = async (req: Request, res: Response, next: NextFunction) => {
+  let { desc, title, status } = req.body;
+  let { id, fileUpload } = req.params;
+  const { user } = req;
+
+  // image upload no change
+  if(fileUpload) {
+    //update desc, title, status in db
+
+  }else{
+    
   }
 
+  // const s3 = new S3({
+  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  // });
+
+  // // Initialize bucket
+  // await initBucket(s3);
+
+  // const uplaodRes = await uploadToS3(s3, req.file);
+
+  // //if upload image to s3 is success
+  // if (uplaodRes.success) {
+  //   const photo = new Photo({
+  //     _id: new mongoose.Types.ObjectId(),
+  //     status,
+  //     image: uplaodRes.data,
+  //     desc,
+  //     title,
+  //     userEmail: (user as IUser).email,
+  //   });
+
+  //   return photo
+  //     .save()
+  //     .then((result) => {
+  //       res.redirect("/me/photos?page=1&limit=20");
+  //     })
+  //     .catch((error) => {
+  //       return res.status(500).json({
+  //         message: error.message,
+  //         error,
+  //       });
+  //     });
+  // } else {
+  //   res.json({ sttaus: false, message: "upload image failed" });
+  // }
 };
 
 // [GET] #get photos by email
@@ -101,7 +152,10 @@ const getPhotoByEmail = async (
       const newLimit = parseInt(limit);
       const skip = (newPage - 1) * newLimit;
       try {
-        const list = await Photo.find({ userEmail: (user as IUser).email })
+        const list = await Photo.find({
+          userEmail: (user as IUser).email,
+          deleted: false,
+        })
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(newLimit)
@@ -146,16 +200,29 @@ const goToEditPage = async (
   res: Response,
   next: NextFunction
 ) => {
-  
-
   // get photo by id
   const photo = await Photo.findById(new ObjectId(req.params.id)).exec();
- 
-  res.render("pages/addmyphoto", {
+
+  res.render("pages/updatemyphoto", {
     title: "Edit Photo",
     user: req.user,
     status: true,
-    photo
+    photo,
+  });
+};
+
+// #delete a photo
+const deletephoto = async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+  //update atb deleted = false
+  Photo.findByIdAndUpdate(id, { deleted: true }, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      //update successfully
+      //redict my photo
+      res.redirect("/me/photos?page=1&limit=20");
+    }
   });
 };
 
@@ -165,4 +232,6 @@ export default {
   getPhotoByEmail,
   goToAddPage,
   goToEditPage,
+  deletephoto,
+  updatePhoto,
 };

@@ -1,0 +1,178 @@
+extends ../index.pug
+
+block main
+    +headerFotoBook(user)
+    .row.myphoto-block
+        .col-xs-0.col-sm-1.col-md-2.d-flex.justify-content-center.block-user
+            ul.nav.flex-column.nav_custom
+                +navigation
+        .col-xs-0.col-sm-10.col-md-8
+            .block-content(style='padding: 30px 15px 30px 15px; position: relative')
+                .d-flex.justify-content-start(style='margin-left: 30px')
+                    p.add-title Update photo
+                form#formAddUpdate.row(method='POST')
+                    .col-lg-6
+                        .row
+                            .col-lg-12
+                                .form-group
+                                    label(for='usr')
+                                    | Title:
+                                    span#erro_title(style='color: red')
+                                        | **Maximum 140 characters
+                                    if(photo)
+                                        input#phototitle.form-control(type='text' value=photo.title placeholder='Photo title' name='title' required='')
+                                    else
+                                        input#phototitle.form-control(type='text' placeholder='Photo title' name='title' required='')
+                            .col-lg-12.col-xl-6
+                                .form-group
+                                    label(for='sel1') Sharing mode:
+                                    select#sel1.form-control(name="status")
+                                       
+                                        if(photo.status == 1)
+                                            option(value=1 selected) Public
+                                            option(value=0) Private
+                                        else
+                                            option(value=1) Public
+                                            option(value=0 selected) Private                                        
+                        .row.mt-4
+                            .col-lg-12.col-xl-6
+                                .custom-file.mt-2.block-file
+                                    if(photo)
+                                        img#imgPreview.image-file-input(style='position: relative; z-index: 0' for='customFile' src=photo.image)
+                                    else
+                                        img#imgPreview.image-file-input(style='position: relative; z-index: 0' for='customFile')
+                                    input#customFile.custom-file-input(type='file' name='filename' style='\
+                                    height: 100%;\
+                                    position: absolute;\
+                                    z-index: 1;\
+                                    top: 0;\
+                                    left: 0;\
+                                    ')
+                                    
+                                    span.span-plussicon(for='customFile')
+                                        i.fa.fa-plus(aria-hidden='true')
+
+                    .col-lg-6
+                        .form-group
+                            label(for='comment') Description
+                                span#erro_desc(style='color: red')
+                                    | **Maximum 300 characters                         
+                            textarea#comment.form-control(rows='5' class="w-100" placeholder='Photo Description' name='desc' required='')=photo.desc
+                    .col-lg-12.mt-4(style='margin-left: 15px')
+                        .col-lg2
+                            button.btn.btn-success.mr-4(type="button" data-toggle='modal' id="btn_update" data-target='#myModelUpdateShow' data-id=photo._id) Update
+                            button.btn.btn-danger(id="button_delete" type="button"  data-toggle='modal' data-id=photo._id data-target='#myModelDeleteShow') Delete
+        .col-xs-0.col-sm-1.col-md-2
+    form(method='POST' id="form_delete")
+    #myModelDeleteShow.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Delete The Photo
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to delete this photo?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            button#btnYes.btn.btn-danger(type="button") Delete
+    #myModelUpdateShow.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Update The Photo
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to update this photo?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            button#btnYesUpdate.btn.btn-danger(type="button") Update
+   
+    script.
+        $(document).ready(function(){
+            var id;
+            var idUpdate;
+            var changeFileUpload = false;
+            $("#button_delete").click(function(){ 
+                id = $(this).data('id')
+            });
+             $("#btn_update").click(function(){ 
+                 idUpdate = $(this).data('id')
+                 alert(idUpdate);
+            });
+        
+            $("#btnYes").click(function(){
+                 $('#form_delete').attr('action', `/photos/delete/${id}?_method=DELETE`);
+                 $( "#form_delete" ).submit();
+            });
+
+            $("#btnYesUpdate").click(function(){ 
+                changeFileUpload ?  $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${true}?_method=PUT`) : $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${false}?_method=PUT`)
+                
+                $( "#formAddUpdate" ).submit();
+            
+            });
+
+            $("#customFile").change(function () {
+            changeFileUpload = true
+            const file = this.files[0];
+            console.log(file);
+            if (file) {
+                let reader = new FileReader();
+                $(".span-plussicon").hide();
+                reader.onload = function (event) {
+                console.log(event.target.result);
+                $("#imgPreview").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+                console.log(reader);
+            }
+            });
+
+            // Validate title
+            $("#erro_title").hide();
+
+            $("#phototitle").keyup(function () {
+            validateTitle();
+            });
+
+            function validateTitle() {
+            let titleValue = $("#phototitle").val();
+            if (titleValue.length > 140) {
+                $("#erro_title").show();
+
+                return false;
+            } else {
+                $("#erro_title").hide();
+                return true;
+            }
+            }
+
+            // Validate title
+            $("#erro_desc").hide();
+
+            $("#comment").keyup(function () {
+            validateDesc();
+            });
+
+            function validateDesc() {
+            let descValue = $("#comment").val();
+            if (descValue.length > 300) {
+                $("#erro_desc").show();
+
+                return false;
+            } else {
+                $("#erro_desc").hide();
+                return true;
+            }
+            }
+        });
+
+

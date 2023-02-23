@@ -34,6 +34,14 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
         },
         {
           /**
+           * query: The query in MQL.
+           */
+          $match: {
+            deleted: false,
+          },
+        },
+        {
+          /**
            * Provide any number of field/order pairs.
            */
           $sort: {

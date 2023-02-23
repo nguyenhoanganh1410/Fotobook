@@ -14,6 +14,8 @@ function route(app: Express) {
   app.use("/photos", photoRoute);
   app.use("/", authRoute);
   app.use("/me", authUser, meRoute);
+
+
 }
 
 export default route;

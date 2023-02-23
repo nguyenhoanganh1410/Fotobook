@@ -19,23 +19,17 @@ block main
                                     | Title:
                                     span#erro_title(style='color: red')
                                         | **Maximum 140 characters
-                                    if(photo)
-                                        input#phototitle.form-control(type='text' value=photo.title placeholder='Photo title' name='title' required='')
-                                    else
-                                        input#phototitle.form-control(type='text' placeholder='Photo title' name='title' required='')
+                                    input#phototitle.form-control(type='text' placeholder='Photo title' name='title' required='')
                             .col-lg-12.col-xl-6
                                 .form-group
                                     label(for='sel1') Sharing mode:
                                     select#sel1.form-control(name="status")
-                                        option(value=1) Public
-                                        option(value=0) Private
+                                        option(value=1 selected) Public
+                                        option(value=0) Private      
                         .row.mt-4
                             .col-lg-12.col-xl-6
                                 .custom-file.mt-2.block-file
-                                    if(photo)
-                                        img#imgPreview.image-file-input(style='position: relative; z-index: 0' for='customFile' src=photo.image)
-                                    else
-                                        img#imgPreview.image-file-input(style='position: relative; z-index: 0' for='customFile')
+                                    img#imgPreview.image-file-input(style='position: relative; z-index: 0' for='customFile')
                                     input#customFile.custom-file-input(type='file' name='filename' style='\
                                     height: 100%;\
                                     position: absolute;\
@@ -43,29 +37,20 @@ block main
                                     top: 0;\
                                     left: 0;\
                                     ')
-                                    
                                     span.span-plussicon(for='customFile')
                                         i.fa.fa-plus(aria-hidden='true')
-
                     .col-lg-6
                         .form-group
                             label(for='comment') Description
-                                span#erro_desc(style='color: red')
-                                    | **Maximum 300 characters
-                            if(photo)
-                                textarea#comment.form-control(rows='5' class="w-100" placeholder='Photo Description' name='desc' required='')=photo.desc
-                            else
-                                textarea#comment.form-control(rows='5' placeholder='Photo Description' name='desc' required='')
+                            span#erro_desc(style='color: red')
+                                | **Maximum 300 characters
+                            textarea#comment.form-control(rows='5' placeholder='Photo Description' name='desc' required='')
                     .col-lg-12.mt-4(style='margin-left: 15px')
                         .col-lg2
                             button.btn.btn-success(type='submit') Save
-                            a.btn.btn-success(href="") Update
-                            a.btn.btn-success(href="") Delete
         .col-xs-0.col-sm-1.col-md-2
-
     script.
         $(document).ready(function(){
-          
             $("#customFile").change(function () {
             const file = this.files[0];
             console.log(file);
