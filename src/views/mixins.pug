@@ -58,7 +58,7 @@ mixin navigation
 
 
 
-mixin cardPhoto(title, desc, image, createdAt, like)
+mixin cardPhoto(title, desc, image, createdAt, like, u)
   .col-md-12.col-lg-6.mb-4.mb-4
     .card-custom(data-toggle='modal' data-title=title data-desc=desc data-img=image data-target='#modelImage')
       .row
@@ -74,7 +74,7 @@ mixin cardPhoto(title, desc, image, createdAt, like)
                 font-weight: 500;\
                 font-size: 13px;\
                 text-transform: capitalize;\
-                ') #{user.firstName + ' ' + user.lastName}
+                ') #{u.firstName + ' ' + u.lastName}
               .card-block_content
                 h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')=title
                 if desc.length > 100
