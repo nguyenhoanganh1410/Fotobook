@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
+import { NextFunction, Request, Response, ErrorRequestHandler } from "express";
+import mongoose, { Error } from "mongoose";
 import { ObjectId } from "mongodb";
 import Photo from "../model/photo";
 import IUser from "../interface/user";
 import { S3 } from "aws-sdk";
 import initBucket from "../service/initBucket";
 import { uploadToS3 } from "../service/uploadToS3";
+import { uptime } from "os";
 
 interface Query {
   page: string;
@@ -88,53 +89,52 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
 
 // [POST] #create a new photo
 const updatePhoto = async (req: Request, res: Response, next: NextFunction) => {
-  let { desc, title, status } = req.body;
-  let { id, fileUpload } = req.params;
-  const { user } = req;
+  let { fileUpload } = req.params;
 
   // image upload no change
-  if(fileUpload) {
+  if(fileUpload === "false") {
     //update desc, title, status in db
-
+    try {
+      const result = await Photo.updateOne({ _id: req.params.id }, req.body)
+      return res.redirect("/me/photos?page=1&limit=20");
+    } catch (error : any) {
+      return res.send(error.message);
+    }
+   
   }else{
-    
+    const s3 = new S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    });
+      // Initialize bucket
+      await initBucket(s3);
+
+      const uplaodRes = await uploadToS3(s3, req.file);
+      const {status, desc, title} = req.body;
+      // uplaodRes.data
+      const param = {
+        image : uplaodRes.data,
+        status,
+        desc,
+        title
+      }
+      //if upload image to s3 is success
+      if (uplaodRes.success) {
+        return Photo
+          .updateOne({ _id: req.params.id }, param)
+          .then((result) => {
+            res.redirect("/me/photos?page=1&limit=20");
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              message: error.message,
+              error,
+            });
+          });
+      } else {
+        res.json({ sttaus: false, message: "upload image failed" });
+      }
   }
-
-  // const s3 = new S3({
-  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  // });
-
-  // // Initialize bucket
-  // await initBucket(s3);
-
-  // const uplaodRes = await uploadToS3(s3, req.file);
-
-  // //if upload image to s3 is success
-  // if (uplaodRes.success) {
-  //   const photo = new Photo({
-  //     _id: new mongoose.Types.ObjectId(),
-  //     status,
-  //     image: uplaodRes.data,
-  //     desc,
-  //     title,
-  //     userEmail: (user as IUser).email,
-  //   });
-
-  //   return photo
-  //     .save()
-  //     .then((result) => {
-  //       res.redirect("/me/photos?page=1&limit=20");
-  //     })
-  //     .catch((error) => {
-  //       return res.status(500).json({
-  //         message: error.message,
-  //         error,
-  //       });
-  //     });
-  // } else {
-  //   res.json({ sttaus: false, message: "upload image failed" });
-  // }
 };
 
 // [GET] #get photos by email

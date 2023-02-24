@@ -13,7 +13,3 @@ export default interface IPhoto {
   like: Array<IIdUser>;
   userEmail: string;
 }
-
-export interface PhotoModel extends Model<IPhoto> {
-  getAllPhotos(): number;
-}

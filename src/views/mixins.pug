@@ -47,14 +47,32 @@ mixin headerFotoBook(user)
 
 
 
-mixin navigation 
-  ul.nav.flex-column.nav_custom
-    li.nav-item
-      a.nav-link.active(href='/feeds?type=photo&page=1&limit=4') My Feed
-    li.nav-item
-      a.nav-link(href='/me/photos?page=1&limit=20') My Photos
-    li.nav-item
-      a.nav-link(href='/albums') My Albums
+mixin navigation(text)
+  if(text === "feed")
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link.active(href='/feeds?type=photo&page=1&limit=4') My Feed
+      li.nav-item
+        a.nav-link(href='/me/photos?page=1&limit=20') My Photos
+      li.nav-item
+        a.nav-link(href='/albums') My Albums
+  else if(text === 'photo')
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/feeds?type=photo&page=1&limit=4') My Feed
+      li.nav-item
+        a.nav-link.active(href='/me/photos?page=1&limit=20') My Photos
+      li.nav-item
+        a.nav-link(href='/albums') My Albums
+  else if(text === "album")
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/feeds?type=photo&page=1&limit=4') My Feed
+      li.nav-item
+        a.nav-link(href='/me/photos?page=1&limit=20') My Photos
+      li.nav-item
+        a.nav-link.active(href='/albums') My Albums
+  
 
 
 
@@ -83,8 +101,8 @@ mixin cardPhoto(title, desc, image, createdAt, like, u)
                   p.card-content=desc
             .d-flex.justify-content-between
               span.like-block(style='color: #3c5999; font-size: 12px')
-                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')= like.length
-
+                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
+                span= like.length
               span(style='color: #bdbdbd; font-size: 12px') #{createdAt.getDate()  + "-" + (createdAt.getMonth()+1) + "-" + createdAt.getFullYear() + " " + createdAt.getHours() + ":" + createdAt.getMinutes()}
 
 
@@ -100,3 +118,36 @@ mixin myPhotoCard(image, title, status, _id)
       if(status == false)
         span.lock-css
           i.fa.fa-lock(aria-hidden='true')
+
+mixin cardAlbum(title, desc, images, createdAt, like, u)
+                                        .card-custom(data-toggle='modal' data-target='#largeModal')
+                                            .row
+                                                .col-sm-12.col-lg-6.p-2
+                                                    .block-images
+                                                        img.card-img-top.img-thumbnail(src= images[0].url alt='Card image')
+                                                        img.card-img-top.img-thumbnail(src= images[0].url alt='Card image')
+                                                        img.card-img-top.img-thumbnail(src= images[0].url alt='Card image')
+
+                                                .col-sm-12.col-lg-6.p-2
+                                                    .d-flex.flex-column.justify-content-between.h-100
+                                                        .card-content-top
+                                                            .d-flex(style='align-items: center')
+                                                                img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                                                                span.ml-2(style='\
+                                                                color: #3c5999;\
+                                                                font-weight: 700;\
+                                                                font-size: 13px;\
+                                                                text-transform: capitalize;\
+                                                                ') #{u.firstName + ' ' + u.lastName}
+                                                            .card-block_content
+                                                                h6.mt-2.mb-2(style='font-weight: 700; font-size: 14px')= title
+                                                                p.card-content
+                                                                  if desc.length > 100
+                                                                    p.card-content= desc.substring(0,100) + "..." 
+                                                                  else 
+                                                                    p.card-content=desc
+                                                        .d-flex.justify-content-between
+                                                            span.like-block(style='color: #3c5999; font-size: 12px')
+                                                                i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
+                                                                span= like.length
+                                                            span(style='color: #bdbdbd; font-size: 12px') #{createdAt.getDate()  + "-" + (createdAt.getMonth()+1) + "-" + createdAt.getFullYear() + " " + createdAt.getHours() + ":" + createdAt.getMinutes()}

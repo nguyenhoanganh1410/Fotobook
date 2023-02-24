@@ -50,24 +50,7 @@ mongoose
     logging.error(NAMESPACE, error.message, error);
   });
 
-// pug config
-app.set("view engine", "pug");
-app.set("views", `${__dirname}/views`);
-
-// static files
-app.use(express.static(path.join(__dirname, "public")));
-//express > 4.16
-app.use(express.json());
-
-// override with POST having ?_method=PUT
-app.use(methodOverride("_method"));
-
-app.use(morgan("combined"));
-
-/** Parse the body of the request */
-app.use(bodyParser.urlencoded({ extended: true }));
-
-/** Error handling */
+  /** Error handling */
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
@@ -92,6 +75,24 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     message: error.message,
   });
 });
+
+
+// pug config
+app.set("view engine", "pug");
+app.set("views", `${__dirname}/views`);
+
+// static files
+app.use(express.static(path.join(__dirname, "public")));
+//express > 4.16
+app.use(express.json());
+
+// override with POST having ?_method=PUT
+app.use(methodOverride("_method"));
+
+app.use(morgan("combined"));
+
+/** Parse the body of the request */
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // init route
 route(app);

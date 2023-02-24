@@ -27,9 +27,13 @@
 .card-custom p {
   margin: 0;
 }
+.card-custom{
+  border-radius: 6px;
+}
 .card-custom img {
   /* border-top-left-radius: 4px;
     border-top-right-radius: 4px; */
+    border-radius: 6px;
 }
 .card-custom .lock-css {
   position: absolute;

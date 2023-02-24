@@ -1,14 +1,20 @@
-import mongoose, { Schema, SchemaDefinition } from "mongoose";
-import IPhoto, { IIdUser } from "../interface/photo";
+import { Model, Types, Schema, SchemaDefinition, model } from "mongoose";
+import { IAlbum, IIdUser, image } from "../interface/album";
 
-const PhotoSchema: Schema = new Schema(
+// TMethodsAndOverrides
+type AlbumDocumentProps = {
+  images: Types.DocumentArray<image>;
+};
+type AlbumModelType = Model<IAlbum, {}, AlbumDocumentProps>;
+
+const AlbumSchema = new Schema<IAlbum, AlbumModelType>(
   {
-    image: { type: String, required: true },
     title: { type: String, required: true, lowercase: true, trim: true },
     desc: { type: String, required: true, lowercase: true, trim: true },
     status: { type: Boolean, required: true },
     deleted: { type: Boolean, required: true },
     userEmail: { type: String, require: true },
+    images: [new Schema<image>({ url: String })],
     like: [
       {
         label: { type: String, required: true },
@@ -21,6 +27,6 @@ const PhotoSchema: Schema = new Schema(
   }
 );
 
-const photo = mongoose.model<IPhoto>("Photo", PhotoSchema);
-
-export default mongoose.model<IPhoto>("Photo", PhotoSchema);
+// Create model
+const Album = model<IAlbum, AlbumModelType>("Album", AlbumSchema);
+export default Album;

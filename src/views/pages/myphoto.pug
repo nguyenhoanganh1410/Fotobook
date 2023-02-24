@@ -4,7 +4,7 @@ block main
     +headerFotoBook(user)
     .row.myphoto-block
         .col-lg-1.col-xl-2.d-flex.justify-content-center.block-user
-            +navigation
+            +navigation("photo")
         .col-lg-10.col-xl-8
             .block-content.d-flex.justify-content-between.flex-column
                 .block-content-main
@@ -12,7 +12,7 @@ block main
                         a.btn.btn-success(href='/me/photo/add-photo' type='button') Add New Photo
                     .row
                         each photo in data
-                            .col-sm-6.col-md-4.col-lg-4.col-xl-3.mb-4
+                            .col-sm-6.col-md-4.col-lg-4.col-xl-4.mb-4
                                 +myPhotoCard(photo.image, photo.title, photo.status, photo._id)
             
                 .custom-panigation

@@ -9,7 +9,7 @@ import { authUser } from "../middleware/auth";
 router.delete("/delete/:id", photoController.deletephoto);
 
 // [PUT] /photos/update/:id
-router.put("/update/:id/:fileUpload", photoController.updatePhoto);
+router.put("/update/:id/:fileUpload",  upload.single("filename"), photoController.updatePhoto);
 
 // [GET] /photos/ #get photos by email
 router.get("/", photoController.getPhotoByEmail);
