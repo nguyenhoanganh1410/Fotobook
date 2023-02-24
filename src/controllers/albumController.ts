@@ -86,4 +86,61 @@ const createAlbum = async (req: Request, res: Response, next: NextFunction) => {
   // }
 };
 
-export default { createAlbum };
+// [GET] #get albums by email
+const getAlbumsByEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    const { user } = req;
+    const { page, limit } = req.query as unknown as Query;
+
+    if (page) {
+      const newPage = parseInt(page);
+      const newLimit = parseInt(limit);
+      const skip = (newPage - 1) * newLimit;
+      try {
+        const list = await Album.find({
+          userEmail: (user as IUser).email,
+          deleted: false,
+        })
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(newLimit)
+          .exec();
+        const objectlist = list.map((photo) => {
+          return photo.toObject();
+        });
+        console.log(objectlist);
+
+        const listRoot = await Album.find().exec();
+
+        res.render("pages/myalbum", {
+          title: "My Albums",
+          user: req.user,
+          data: objectlist,
+          currentPage: newPage,
+          totalPage: Math.ceil(listRoot.length / newLimit),
+        });
+      } catch (error: any) {
+        return res.status(500).json({
+          message: "erro",
+          //error
+        });
+      }
+    }
+  } else {
+    res.redirect("/login");
+  }
+};
+
+// #redirect add photo page
+const goToAddPage = (req: Request, res: Response, next: NextFunction) => {
+  res.render("pages/addmyalbum", {
+    title: "Add Album",
+    user: req.user,
+  });
+};
+
+export default { createAlbum, getAlbumsByEmail, goToAddPage };

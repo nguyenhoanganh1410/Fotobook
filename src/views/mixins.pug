@@ -55,7 +55,7 @@ mixin navigation(text)
       li.nav-item
         a.nav-link(href='/me/photos?page=1&limit=20') My Photos
       li.nav-item
-        a.nav-link(href='/albums') My Albums
+        a.nav-link(href='/me/albums?page=1&limit=20') My Albums
   else if(text === 'photo')
     ul.nav.flex-column.nav_custom
       li.nav-item
@@ -63,7 +63,7 @@ mixin navigation(text)
       li.nav-item
         a.nav-link.active(href='/me/photos?page=1&limit=20') My Photos
       li.nav-item
-        a.nav-link(href='/albums') My Albums
+        a.nav-link(href='/me/albums?page=1&limit=20') My Albums
   else if(text === "album")
     ul.nav.flex-column.nav_custom
       li.nav-item
@@ -71,7 +71,7 @@ mixin navigation(text)
       li.nav-item
         a.nav-link(href='/me/photos?page=1&limit=20') My Photos
       li.nav-item
-        a.nav-link.active(href='/albums') My Albums
+        a.nav-link.active(href='/me/albums?page=1&limit=20') My Albums
   
 
 
@@ -120,7 +120,8 @@ mixin myPhotoCard(image, title, status, _id)
           i.fa.fa-lock(aria-hidden='true')
 
 mixin cardAlbum(title, desc, images, createdAt, like, u)
-                                        .card-custom(data-toggle='modal' data-target='#largeModal')
+                                        - var dataImages = JSON.stringify(images)
+                                        .card-custom.cardAlbum(data-toggle='modal' data-target='#largeModal'  data-titlealbum=title data-dalbum=desc data-imgalbum= dataImages)
                                             .row
                                                 .col-sm-12.col-lg-6.p-2
                                                     .block-images
@@ -151,3 +152,22 @@ mixin cardAlbum(title, desc, images, createdAt, like, u)
                                                                 i.fa.fa-heart.mr-1.heart-icon(aria-hidden='true')
                                                                 span= like.length
                                                             span(style='color: #bdbdbd; font-size: 12px') #{createdAt.getDate()  + "-" + (createdAt.getMonth()+1) + "-" + createdAt.getFullYear() + " " + createdAt.getHours() + ":" + createdAt.getMinutes()}
+
+
+
+mixin myAlbumCard(images, title, status, id)
+  .card-custom.card-custom-albums
+    a(href='/me/album/edit')
+      .card_text.d-flex.justify-content-between
+        p.text-content= title
+        span
+          i.fa.fa-pencil-square-o(aria-hidden='true')
+      .block-content-bottom
+        .my-albums
+            img.card-img-top.img-thumbnail(src=images[0].url alt='Card image')
+            img.card-img-top.img-thumbnail(src=images[0].url alt='Card image')
+            img.card-img-top.img-thumbnail(src=images[0].url alt='Card image')
+
+      if(status === false)
+        span.lock-css
+          i.fa.fa-lock(aria-hidden='true')

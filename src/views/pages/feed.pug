@@ -31,7 +31,7 @@ block main
                                 .row
                                     each photo in data
                                         .col-md-12.col-lg-6.mb-4.mb-4
-                                            +cardPhoto(photo.title, photo.desc, photo.images, photo.createdAt, photo.like, photo.user)
+                                            +cardAlbum(photo.title, photo.desc, photo.images, photo.createdAt, photo.like, photo.user)
 
                 .custom-panigation
                     ul.pagination
@@ -65,21 +65,21 @@ block main
         .modal-dialog.modal-lg
             .modal-content
                 .modal-header
-                    h6 Title in here
+                    h6.modelAlbumTitle Title in here
                 .modal-body
                     // carousel
                     #carouselExampleIndicators.carousel.slide(data-ride='carousel')
-                        ol.carousel-indicators
-                            li.active(data-target='#carouselExampleIndicators' data-slide-to='0')
-                            li(data-target='#carouselExampleIndicators' data-slide-to='1')
-                            li(data-target='#carouselExampleIndicators' data-slide-to='2')
-                        .carousel-inner
-                            .carousel-item.active
-                                img.img-size(src='https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1391&q=80' alt='First slide')
-                            .carousel-item
-                                img.img-size(src='https://images.unsplash.com/photo-1491555103944-7c647fd857e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80' alt='Second slide')
-                            .carousel-item
-                                img.img-size(src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80' alt='Second slide')
+                        //- ol.carousel-indicators
+                        //-     li.active(data-target='#carouselExampleIndicators' data-slide-to='0')
+                        //-     li(data-target='#carouselExampleIndicators' data-slide-to='1')
+                        //-     li(data-target='#carouselExampleIndicators' data-slide-to='2')
+                        .carousel-inner#modelAlbumImages
+                            //- .carousel-item.active
+                            //-     img.img-size(src='https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1391&q=80' alt='First slide')
+                            //- .carousel-item
+                            //-     img.img-size(src='https://images.unsplash.com/photo-1491555103944-7c647fd857e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80' alt='Second slide')
+                            //- .carousel-item
+                            //-     img.img-size(src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80' alt='Second slide')
                         a.carousel-control-prev(href='#carouselExampleIndicators' role='button' data-slide='prev')
                             span.carousel-control-prev-icon(aria-hidden='true')
                             span.sr-only Previous
@@ -87,8 +87,7 @@ block main
                             span.carousel-control-next-icon(aria-hidden='true')
                             span.sr-only Next
                 .modal-footer
-                    p(style='font-size: 13px;')
-                    | Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores, mollitia eligendi illo ipsam quia magnam iusto quidem harum, quas fugit quos. Earum facere ut iure animi magni quisquam cumque veritatis?
+                    p.modelAlbumtext(style='font-size: 13px; text-align:"start') Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores, mollitia eligendi illo ipsam quia magnam iusto quidem harum, quas fugit quos. Earum facere ut iure animi magni quisquam cumque veritatis?
                     
 
 
@@ -96,12 +95,61 @@ block main
     script.
         $(document).ready(function(){
             $(".card-custom").click(function(){
-                var urlImage = $(this).data('img')
-                var title = $(this).data('title')
-                var desc = $(this).data('desc')
+              
+                let urlImage = $(this).data('img')
+                let title = $(this).data('title')
+                let desc = $(this).data('desc')
 
                 $(".model-img").attr("src", urlImage);
                 $(".block-header").text(title)
                 $(".block-desc").text(desc)
+            });
+            
+            $(".cardAlbum").click(function(){              
+                let desc = $(this).data('dalbum')
+
+                //remove all elements 
+                var block = document.getElementById("modelAlbumImages");
+                
+                while (block.hasChildNodes()) {
+                    block.firstChild.remove()
+                 }
+
+                let arrImage = $(this).data('imgalbum');
+                
+                
+                let title = $(this).data('titlealbum')
+                $(".modelAlbumTitle").text(title)
+                $(".modelAlbumtext").text(desc)
+
+               
+               
+                for(let i = 0; i < arrImage.length; ++i){
+                    var newDiv = document.createElement("div");  // Create with DOM
+                     newDiv.classList = "carousel-item"
+    
+                    //add a class for div
+                    if(i === 0){
+                        newDiv.classList.add("active");
+                    }
+                
+                    // create a new image element
+                    var newImg = document.createElement("img");  // Create with DOM
+                    newImg.classList = "img-size"
+                    newImg.classList.add("img-choised");
+
+                    
+                    newImg.setAttribute("src", arrImage[i].url);
+
+                    newDiv.append(newImg);
+
+                    console.log(newDiv)
+                    
+                    
+                  
+                    block.append(newDiv);
+                }
+               
+
             });
         });
