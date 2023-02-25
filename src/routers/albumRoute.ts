@@ -8,6 +8,6 @@ import { authUser } from "../middleware/auth";
 const router = express.Router();
 
 // [POST] /photos/ #add photo
-router.post("/add", albumController.createAlbum);
+router.post("/add", upload.array("images", 50), albumController.createAlbum);
 
 export default router;

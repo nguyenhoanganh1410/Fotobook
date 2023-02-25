@@ -2,16 +2,23 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import local_strategy from "passport-local";
 import bcrypt from "bcryptjs";
 import passport from "passport";
+import IUser from "../interface/user";
 const LocalStrategy = local_strategy.Strategy;
 const router = express.Router();
 
-// //home page -> not login
-// router.get('/',passport.authenticate('local', {
-//          successRedirect:'/feeds',
-//          failureRedirect:'/login'
-//      }), (req: Request, res: Response, next: NextFunction) => {
-//     res.send("home page")
-// })
+//[GET] / #goto feed page
+router.get("/", (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) {
+    const { user } = req;
+
+    if ((user as IUser).role === "admin") {
+      res.send("admin page");
+    }
+    next();
+  } else {
+    res.redirect("/login");
+  }
+});
 
 //[GET] /login # go to login page
 router.get("/login", (req: Request, res: Response, next: NextFunction) => {
@@ -53,7 +60,5 @@ router.post("/login", function (req, res, next) {
     });
   })(req, res, next);
 });
-
-
 
 export = router;

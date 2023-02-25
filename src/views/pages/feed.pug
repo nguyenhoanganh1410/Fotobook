@@ -24,14 +24,20 @@ block main
                         if(type=="photo")                        
                             #block-photos.container.tab-pane.active
                                 .row
-                                    each photo in data
-                                        +cardPhoto(photo.title, photo.desc, photo.image, photo.createdAt, photo.like, photo.user)
+                                    if(data.length === 0)
+                                        img.isEmpty(src="https://static.thenounproject.com/png/203873-200.png")
+                                    else
+                                        each photo in data
+                                            +cardPhoto(photo.title, photo.desc, photo.image, photo.createdAt, photo.like, photo.user)
                         else if(type=="album")
                             #block-albums.container.tab-pane.active
                                 .row
-                                    each photo in data
-                                        .col-md-12.col-lg-6.mb-4.mb-4
-                                            +cardAlbum(photo.title, photo.desc, photo.images, photo.createdAt, photo.like, photo.user)
+                                    if(data.length === 0)
+                                        img.isEmpty(src="https://static.thenounproject.com/png/203873-200.png")
+                                    else
+                                        each photo in data
+                                           .col-md-12.col-lg-6.mb-4.mb-4
+                                                +cardAlbum(photo.title, photo.desc, photo.images, photo.createdAt, photo.like, photo.user)
 
                 .custom-panigation
                     ul.pagination

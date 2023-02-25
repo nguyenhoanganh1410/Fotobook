@@ -2,10 +2,10 @@ import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
 
 // type DestinationCallback = (error: Error | null, destination: string) => void
-type FileNameCallback = (error: Error | null, filename: string) => void
+type FileNameCallback = (error: Error | null, filename: string) => void;
 
 // export const multerConfig = {
-  
+
 //   storage : multer.diskStorage({
 //     destination: 'src/uploads/',
 //     filename: function (req: Request, file: Express.Multer.File, cb: FileNameCallback) {
@@ -23,18 +23,17 @@ type FileNameCallback = (error: Error | null, filename: string) => void
 
 // }
 
-
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'src/uploads');
+  destination: function (req, file, cb) {
+    cb(null, "src/uploads/images");
   },
   filename: (req, file, cb) => {
     const { originalname } = file;
     cb(null, `${Date.now()}-${originalname}`);
-   },
+  },
 });
 
-const fileFilter = (req : any, file : any, cb : any) => {
+const fileFilter = (req: any, file: any, cb: any) => {
   if (file.mimetype.split("/")[0] === "image") {
     cb(null, true);
   } else {
@@ -48,4 +47,4 @@ const upload = multer({
   limits: { fileSize: 1000000000, files: 2 },
 });
 
-export default upload
+export default upload;

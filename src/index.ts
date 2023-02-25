@@ -50,7 +50,7 @@ mongoose
     logging.error(NAMESPACE, error.message, error);
   });
 
-  /** Error handling */
+/** Error handling */
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
@@ -76,13 +76,14 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-
 // pug config
 app.set("view engine", "pug");
 app.set("views", `${__dirname}/views`);
 
 // static files
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(express.static(path.join(__dirname, "uploads")));
 //express > 4.16
 app.use(express.json());
 
