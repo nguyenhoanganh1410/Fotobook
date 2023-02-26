@@ -92,48 +92,46 @@ const updatePhoto = async (req: Request, res: Response, next: NextFunction) => {
   let { fileUpload } = req.params;
 
   // image upload no change
-  if(fileUpload === "false") {
+  if (fileUpload === "false") {
     //update desc, title, status in db
     try {
-      const result = await Photo.updateOne({ _id: req.params.id }, req.body)
+      const result = await Photo.updateOne({ _id: req.params.id }, req.body);
       return res.redirect("/me/photos?page=1&limit=20");
-    } catch (error : any) {
+    } catch (error: any) {
       return res.send(error.message);
     }
-   
-  }else{
+  } else {
     const s3 = new S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
-      // Initialize bucket
-      await initBucket(s3);
+    // Initialize bucket
+    await initBucket(s3);
 
-      const uplaodRes = await uploadToS3(s3, req.file);
-      const {status, desc, title} = req.body;
-      // uplaodRes.data
-      const param = {
-        image : uplaodRes.data,
-        status,
-        desc,
-        title
-      }
-      //if upload image to s3 is success
-      if (uplaodRes.success) {
-        return Photo
-          .updateOne({ _id: req.params.id }, param)
-          .then((result) => {
-            res.redirect("/me/photos?page=1&limit=20");
-          })
-          .catch((error) => {
-            return res.status(500).json({
-              message: error.message,
-              error,
-            });
+    const uplaodRes = await uploadToS3(s3, req.file);
+    const { status, desc, title } = req.body;
+    // uplaodRes.data
+    const param = {
+      image: uplaodRes.data,
+      status,
+      desc,
+      title,
+    };
+    //if upload image to s3 is success
+    if (uplaodRes.success) {
+      return Photo.updateOne({ _id: req.params.id }, param)
+        .then((result) => {
+          res.redirect("/me/photos?page=1&limit=20");
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            message: error.message,
+            error,
           });
-      } else {
-        res.json({ sttaus: false, message: "upload image failed" });
-      }
+        });
+    } else {
+      res.json({ sttaus: false, message: "upload image failed" });
+    }
   }
 };
 
@@ -165,14 +163,19 @@ const getPhotoByEmail = async (
         });
         console.log(objectlist);
 
-        const listRoot = await Photo.find().exec();
+        const listRoot = await Photo.find({
+          userEmail: (user as IUser).email,
+          deleted: false,
+        }).exec();
 
+        const pages = Math.ceil(Number(listRoot.length) / newLimit);
+        console.log("page number ", pages);
         res.render("pages/myphoto", {
           title: "My Photos",
           user: req.user,
           data: objectlist,
           currentPage: newPage,
-          totalPage: Math.ceil(listRoot.length / newLimit),
+          totalPage: pages,
         });
       } catch (error: any) {
         return res.status(500).json({

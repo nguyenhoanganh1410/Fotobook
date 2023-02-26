@@ -157,7 +157,7 @@ mixin cardAlbum(title, desc, images, createdAt, like, u)
 
 mixin myAlbumCard(images, title, status, id)
   .card-custom.card-custom-albums
-    a(href='/me/album/edit')
+    a(href="/me/album/" + id +  "/edit")
       .card_text.d-flex.justify-content-between
         p.text-content= title
         span
@@ -171,3 +171,73 @@ mixin myAlbumCard(images, title, status, id)
       if(status === false)
         span.lock-css
           i.fa.fa-lock(aria-hidden='true')
+
+mixin panigation(pages, currentPage, type)
+  - var i = (currentPage > 3 ? currentPage - 2 : 1)
+  - console.log("i is ", i)
+  .custom-panigation
+    ul.pagination
+      if(currentPage === 1)
+        li.page-item.disabled
+          a.page-link(href='#') Previous
+      else
+        li.page-item
+          a.page-link(href="/me/"+type+"?page=1&limit=20") Previous
+      if (i == 1)
+      else
+        li.page-item.disabled
+          a.page-link(href='#') ...
+      - for(; i <= (currentPage + 2) && i <= pages; i++) {
+          - console.log(i)
+          if i == currentPage
+            li.page-item.active
+              a.page-link(href="me/"+type+"?page=1&limit=20")= i
+          else
+            li.page-item
+              a.page-link(href="me/"+type+"?page=1&limit=20")= i
+          if i === (currentPage + 2) && i < pages
+            li.page-item.disabled
+              a.page-link(href='#') ...  
+      - }
+      if(currentPage === pages)
+        li.page-item.disabled
+          a.page-link(href='#') Last
+      else
+        li.page-item
+          a.page-link(href="/me/"+type+"?page=" + pages + "&limit=20") Last
+
+
+
+mixin panigationFeed(pages, currentPage, type)
+  - var i = (currentPage > 3 ? currentPage - 2 : 1)
+  - console.log("i is ", i)
+  .custom-panigation
+    ul.pagination
+      if(currentPage === 1)
+        li.page-item.disabled
+          a.page-link(href='#') Previous
+      else
+        li.page-item
+          a.page-link(href="/feeds?type="+type+"&page=1&limit=4") Previous
+      if (i == 1)
+      else
+        li.page-item.disabled
+          a.page-link(href='#') ...
+      - for(; i <= (currentPage + 2) && i <= pages; i++) {
+          - console.log(i)
+          if i == currentPage
+            li.page-item.active
+              a.page-link(href="/feeds?type="+type+"&page="+i+"&limit=4")= i
+          else
+            li.page-item
+              a.page-link(href="/feeds?type="+type+"&page="+i+"&limit=4")= i
+          if i === (currentPage + 2) && i < pages
+            li.page-item.disabled
+              a.page-link(href='#') ...  
+      - }
+      if(currentPage === pages)
+        li.page-item.disabled
+          a.page-link(href='#') Last
+      else
+        li.page-item
+          a.page-link(href="/feeds?type="+type+"&page="+ pages +"&limit=4") Last

@@ -10,4 +10,7 @@ const router = express.Router();
 // [POST] /photos/ #add photo
 router.post("/add", upload.array("images", 50), albumController.createAlbum);
 
+// [DELETE] /albums/delete/:id/_method=DELETE  #delete album
+router.delete("/delete/:id", albumController.deleteAlbum);
+
 export default router;

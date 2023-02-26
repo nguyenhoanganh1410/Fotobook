@@ -75,14 +75,17 @@ const getAlbumsByEmail = async (req: Request, res: Response) => {
         });
         console.log(objectlist);
 
-        const listRoot = await Album.find().exec();
-
+        const listRoot = await Album.find({
+          userEmail: (user as IUser).email,
+          deleted: false,
+        }).exec();
+        const pages = Math.ceil(Number(listRoot.length) / newLimit);
         res.render("pages/myalbum", {
           title: "My Albums",
           user: req.user,
           data: objectlist,
           currentPage: newPage,
-          totalPage: Math.ceil(listRoot.length / newLimit),
+          totalPage: pages,
         });
       } catch (error: any) {
         return res.status(500).json({
@@ -104,4 +107,42 @@ const goToAddPage = (req: Request, res: Response) => {
   });
 };
 
-export default { createAlbum, getAlbumsByEmail, goToAddPage };
+// #redirect edit photo page
+const goToEditPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // get photo by id
+  const album = await Album.findById(new ObjectId(req.params.id)).exec();
+
+  res.render("pages/updatemyalbum", {
+    title: "Edit Album",
+    user: req.user,
+    status: true,
+    album,
+  });
+};
+
+// #delete a ablum
+const deleteAlbum = async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+  //update atb deleted = false
+  Album.findByIdAndUpdate(id, { deleted: true }, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      //update successfully
+      //redict my photo
+      res.redirect("/me/albums?page=1&limit=20");
+    }
+  });
+};
+
+export default {
+  createAlbum,
+  getAlbumsByEmail,
+  goToAddPage,
+  goToEditPage,
+  deleteAlbum,
+};

@@ -76,7 +76,56 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
         },
       ]);
 
-      const listRoot = await Photo.find().exec();
+      const listRoot = await Photo.aggregate([
+        {
+          /**
+           * query: The query in MQL.
+           */
+          $match: {
+            status: true,
+          },
+        },
+        {
+          /**
+           * query: The query in MQL.
+           */
+          $match: {
+            deleted: false,
+          },
+        },
+        {
+          /**
+           * Provide any number of field/order pairs.
+           */
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userEmail",
+            foreignField: "email",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $project: {
+            image: 1,
+            title: 1,
+            desc: 1,
+            status: 1,
+            createdAt: 1,
+            like: 1,
+            _id: 1,
+            "user.lastName": 1,
+            "user.email": 1,
+            "user.avatar": 1,
+            "user.firstName": 1,
+          },
+        },
+      ]);
       res.render("pages/feed", {
         title: "FotoBook",
         user: req.user,
@@ -149,8 +198,57 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
           $limit: newLimit,
         },
       ]);
+      const listRoot = await Album.aggregate([
+        {
+          /**
+           * query: The query in MQL.
+           */
+          $match: {
+            status: true,
+          },
+        },
+        {
+          /**
+           * query: The query in MQL.
+           */
+          $match: {
+            deleted: false,
+          },
+        },
+        {
+          /**
+           * Provide any number of field/order pairs.
+           */
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userEmail",
+            foreignField: "email",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $project: {
+            images: 1,
+            title: 1,
+            desc: 1,
+            status: 1,
+            createdAt: 1,
+            like: 1,
+            _id: 1,
+            "user.lastName": 1,
+            "user.email": 1,
+            "user.avatar": 1,
+            "user.firstName": 1,
+          },
+        },
+      ]);
 
-      const listRoot = await Album.find().exec();
       res.render("pages/feed", {
         title: "FotoBook",
         user: req.user,

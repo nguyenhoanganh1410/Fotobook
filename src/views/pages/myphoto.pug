@@ -17,19 +17,9 @@ block main
                             each photo in data
                                 .col-sm-6.col-md-4.col-lg-4.col-xl-4.mb-4
                                     +myPhotoCard(photo.image, photo.title, photo.status, photo._id)
-            
-                .custom-panigation
-                    ul.pagination
-                        li.page-item.disabled
-                            a.page-link(href='#') Previous
-                        li.page-item
-                            a.page-link(href='#') 1
-                        li.page-item
-                            a.page-link(href='#') 2
-                        li.page-item
-                            a.page-link(href='#') 3
-                        li.page-item
-                            a.page-link(href='#') Next
+
+                if(totalPage > 1)
+                    +panigation(totalPage, currentPage, "photos")
         .col-lg-1.col-xl-2
 
 

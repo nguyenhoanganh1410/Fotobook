@@ -24,4 +24,7 @@ router.get("/albums/", albumController.getAlbumsByEmail);
 // [GET] /me/album/add #redict add my album page
 router.get("/album/add-album", albumController.goToAddPage);
 
+// [GET] me/album/:id/edit  #redirect to edit page (my photo)
+router.get("/album/:id/edit", albumController.goToEditPage);
+
 export default router;

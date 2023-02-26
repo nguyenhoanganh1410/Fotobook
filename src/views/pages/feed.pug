@@ -39,18 +39,10 @@ block main
                                            .col-md-12.col-lg-6.mb-4.mb-4
                                                 +cardAlbum(photo.title, photo.desc, photo.images, photo.createdAt, photo.like, photo.user)
 
-                .custom-panigation
-                    ul.pagination
-                        li.page-item.disabled
-                            a.page-link(href='#') Previous
-                        li.page-item
-                            a.page-link(href='#') 1
-                        li.page-item
-                            a.page-link(href='#') 2
-                        li.page-item
-                            a.page-link(href='#') 3
-                        li.page-item
-                            a.page-link(href='#') Next
+                if(type=="photo")
+                    +panigationFeed(totalPage, currentPage, "photo")
+                else if(type=="album")
+                    +panigationFeed(totalPage, currentPage, "album")
         .col-md-1.col-lg-2
 
     // The Modal

@@ -1,0 +1,244 @@
+extends ../index.pug
+
+block main
+    +headerFotoBook(user)
+    .row.myphoto-block
+        .col-xs-0.col-sm-1.col-md-2.d-flex.justify-content-center.block-user
+            ul.nav.flex-column.nav_custom
+                +navigation("album")
+        .col-xs-0.col-sm-10.col-md-8
+            .block-content(style='padding: 30px 15px 30px 15px; position: relative')
+                .d-flex.justify-content-start(style='margin-left: 30px')
+                    p.add-title Update Album
+                form.row#formAlbums(method='POST' action='/albums/add' enctype="multipart/form-data")
+                    .col-lg-6
+                        .row
+                            .col-lg-12
+                                .form-group
+                                    label(for='usr') Title:
+                                        span#erro_title(style='color: red') **Maximum 140 characters
+                                    input#phototitle.form-control(type='text' placeholder='Album title' name='title' required='' value= album.title)
+                            .col-lg-12.col-xl-6
+                                .form-group
+                                    label(for='sel1') Sharing mode:
+                                    select#sel1.form-control(name="status")
+                                        if(album.status == 1)
+                                            option(value=1 selected) Public
+                                            option(value=0) Private
+                                        else
+                                            option(value=1) Public
+                                            option(value=0 selected) Private        
+                    .col-lg-6
+                        .form-group
+                            label(for='comment') Description:
+                                span#erro_desc(style='color: red') **Maximum 300 characters
+                            textarea#comment.form-control(rows='5' placeholder='Album Description' name='desc' required='')= album.desc
+                    .col-lg-12
+                        #block-image-preview.row.mt-4
+                            each thisAlbum in album.images
+                                .col-lg-3.col-xl-3
+                                    .custom-file.mt-2.block-file
+                                        img#imgPreview.image-file-input(for='customFile' src= thisAlbum.url)
+                                        span.span-deleteIcon(for='customFile')
+                                            i.fa.fa-plus(aria-hidden='true')
+
+                            .col-lg-3.col-xl-3
+                                .custom-file.mt-2.block-file
+                                    input#customFile.custom-file-input(type='file' name='images' onchange='preview_images();' accept='image/gif, image/jpeg, image/png' style='\
+                                    height: 100%;\
+                                    position: absolute;\
+                                    z-index: 1;\
+                                    top: 0;\
+                                    left: 0;\
+                                    ')
+                                    span.span-plussicon(for='customFile')
+                                        i.fa.fa-plus(aria-hidden='true')
+
+                    .col-lg-12.mt-4(style='margin-left: 15px')
+                        .col-lg2
+                            button.btn.btn-success.mr-4(type="button" data-toggle='modal' id="btn_update" data-target='#myModelUpdateShow' data-id=album._id) Update
+                            button.btn.btn-danger(id="button_delete" type="button"  data-toggle='modal' data-id=album._id data-target='#myModelDeleteShow') Delete
+        .col-xs-0.col-sm-1.col-md-2
+    form(method='POST' id="form_delete")
+    #myModelDeleteShow.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Delete The album
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to delete this album?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            button#btnYes.btn.btn-danger(type="button") Delete
+    #myModelUpdateShow.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Update The album
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to update this album?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            button#btnYesUpdate.btn.btn-danger(type="button") Update
+   
+    script.
+            var id;
+            var idUpdate;
+            var changeFileUpload = false;
+            $("#button_delete").click(function(){ 
+                id = $(this).data('id')
+            });
+             $("#btn_update").click(function(){ 
+                 idUpdate = $(this).data('id')
+               
+            });
+        
+            $("#btnYes").click(function(){
+                 $('#form_delete').attr('action', `/albums/delete/${id}?_method=DELETE`);
+                 $( "#form_delete" ).submit();
+            });
+
+            $("#btnYesUpdate").click(function(){ 
+                changeFileUpload ?  $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${true}?_method=PUT`) : $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${false}?_method=PUT`)
+                
+                $( "#formAddUpdate" ).submit();
+            
+            });
+        var arrFile = [];
+        var fileUlload = document.getElementById("customFile");
+        var blockPreview = document.getElementById("block-image-preview"); // Create with DOM
+        function preview_images() {
+            var fileElement = document.getElementById("customFile").files;
+            for (var i = 0; i < fileElement.length; i++) {
+            arrFile.push(fileElement[i]);
+            addImage(fileElement[i]);
+            }
+        }
+
+        function addImage(fileElement) {
+            var parentDiv = document.createElement("div"); // Create with DOM
+            parentDiv.classList = "col-lg-3 col-xl-3";
+            parentDiv.id = fileElement.lastModified;
+            var subDiv = document.createElement("div"); // Create with DOM
+            subDiv.classList = "custom-file mt-2 block-file";
+
+            // create a new image element
+            var newImg = document.createElement("img"); // Create with DOM
+            newImg.classList = "image-file-input";
+            newImg.setAttribute("src", URL.createObjectURL(fileElement));
+
+            var spanBlock = document.createElement("span"); // Create with DOM
+            spanBlock.classList = "span-deleteIcon";
+
+            spanBlock.setAttribute("data-filename", fileElement.lastModified);
+            var lastModified = fileElement.lastModified;
+            spanBlock.addEventListener("click", () => {
+            //remove element with lastModified
+            deleteImage(lastModified);
+            });
+
+            var iElement = document.createElement("i"); // Create with DOM
+            iElement.classList = "fa fa-plus";
+            iElement.setAttribute("aria-hidden", true);
+
+            spanBlock.append(iElement);
+            subDiv.append(spanBlock);
+            subDiv.append(newImg);
+            parentDiv.append(subDiv);
+
+            blockPreview.prepend(parentDiv);
+        }
+
+        function deleteImage(lastModified) {
+            //remove element in array with lastModified
+            console.log("delete start: ");
+            const index = arrFile.findIndex(
+            (item) => item.lastModified === lastModified
+            );
+            arrFile.splice(index, 1);
+            console.log("delete sucessfully");
+
+            let elementDelete = document.getElementById(lastModified);
+            elementDelete.remove();
+            console.log(elementDelete);
+        }
+
+        $(document).ready(function(){
+            //click submit button
+            $("#btn-submitFormAlbum").click(function (e) {
+                console.log("submit click")
+                if (validateTitle() && validateDesc()) {
+                    console.log("subutmo sucess")
+                    // Now let's create a DataTransfer to get a FileList
+                    const dataTransfer = new DataTransfer();
+                    for (let i = 0; i < arrFile.length; i++) {
+                        dataTransfer.items.add(arrFile[i]);
+                    }
+                    console.log("datatranfer: ", dataTransfer.files);
+
+                    fileUlload.files = dataTransfer.files;
+
+                    $("#formAlbums").submit();
+                }
+            });
+
+            // Validate title
+            $("#erro_title").hide();
+
+            $("#phototitle").keyup(function () {
+                validateTitle();
+            });
+
+            function validateTitle() {
+                let titleValue = $("#phototitle").val();
+                let lengthTitle = titleValue.length;
+                if (lengthTitle > 140) {
+                        $("#erro_title").show();
+
+                        return false;
+                } else if (lengthTitle === 0) {
+                        $("#erro_title").show();
+                        $("#erro_title").text("Title has not been entered");
+                        return false;
+                } else {
+                        $("#erro_title").hide();
+                        return true;
+                }
+            }
+
+            // Validate desc
+            $("#erro_desc").hide();
+
+            $("#comment").keyup(function () {
+              validateDesc();
+            });
+
+            function validateDesc() {
+                let descValue = $("#comment").val();
+                let descLength = descValue.length;
+                if (descLength > 300) {
+                    $("#erro_desc").show();
+
+                    return false;
+                } else if (descLength === 0) {
+                    $("#erro_desc").show();
+                    $("#erro_desc").text("Description has not been entered");
+                    return false;
+                } else {
+                    $("#erro_desc").hide();
+                    return true;
+                }
+            }
+        });
+
+
