@@ -139,10 +139,47 @@ const deleteAlbum = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
+// [GET] #get all photos
+const getAllALbum = async (req: Request, res: Response, next: NextFunction) => {
+  const { page, limit } = req.query as unknown as Query;
+
+  if (page) {
+    const newPage = parseInt(page);
+    const newLimit = parseInt(limit);
+    const skip = (newPage - 1) * newLimit;
+    try {
+      const list = await Album.find({ deleted: false })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(newLimit)
+        .exec();
+      const objectlist = list.map((photo) => {
+        return photo.toObject();
+      });
+      const listRoot = await Album.find({ deleted: false }).exec();
+
+      const pages = Math.ceil(Number(listRoot.length) / newLimit);
+      return res.render("admin/adminalbum", {
+        title: "Admin Albums",
+        user: req.user,
+        data: objectlist,
+        currentPage: newPage,
+        totalPage: pages,
+      });
+    } catch (error: any) {
+      return res.status(500).json({
+        message: "erro",
+        //error
+      });
+    }
+  }
+};
+
 export default {
   createAlbum,
   getAlbumsByEmail,
   goToAddPage,
   goToEditPage,
   deleteAlbum,
+  getAllALbum,
 };

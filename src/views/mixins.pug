@@ -3,7 +3,10 @@ mixin headerFotoBook(user)
     header.bg-header
       .row(style='display: flex; align-items: center')
         .col-2(style='text-align: end')
-          a.text-white.header-logo(href='feeds') Fotobook
+          if(user.role == 'admin')
+            a.text-white.header-logo(href='feeds') Fotobook Admin
+          else
+            a.text-white.header-logo(href='feeds') Fotobook
         .col-8.d-flex.justify-content-between.align-items-center
           input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
           if user
@@ -72,7 +75,32 @@ mixin navigation(text)
         a.nav-link(href='/me/photos?page=1&limit=20') My Photos
       li.nav-item
         a.nav-link.active(href='/me/albums?page=1&limit=20') My Albums
-  
+
+mixin navigationAdmin(text)
+  if(text === 'photo')
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link.active(href='/admin/photos?page=1&limit=20') Manager Photos
+      li.nav-item
+        a.nav-link(href='/admin/albums?page=1&limit=20') Manager Albums
+      li.nav-item
+        a.nav-link(href='/admin/users?page=1&limit=20') Manager Users
+  else if(text === 'album')
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/admin/photos?page=1&limit=20') Manager Photos
+      li.nav-item
+        a.nav-link.active(href='/admin/albums?page=1&limit=20') Manager Albums
+      li.nav-item
+        a.nav-link(href='/admin/users?page=1&limit=20') Manager Users
+  else if(text === "user")
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/admin/photos?page=1&limit=20') Manager Photos
+      li.nav-item
+        a.nav-link(href='/admin/albums?page=1&limit=20') Manager Albums
+      li.nav-item
+        a.nav-link.active(href='/admin/users?page=1&limit=20') Manager Users
 
 
 

@@ -22,18 +22,23 @@ const getAllPhoto = async (req: Request, res: Response, next: NextFunction) => {
     const newLimit = parseInt(limit);
     const skip = (newPage - 1) * newLimit;
     try {
-      const list = await Photo.find()
+      const list = await Photo.find({ deleted: false })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(newLimit)
         .exec();
+      const objectlist = list.map((photo) => {
+        return photo.toObject();
+      });
+      const listRoot = await Photo.find({ deleted: false }).exec();
 
-      const listRoot = await Photo.find().exec();
-      return res.status(200).json({
-        photos: list,
-        count: list.length,
+      const pages = Math.ceil(Number(listRoot.length) / newLimit);
+      return res.render("admin/adminphoto", {
+        title: "Admin Photos",
+        user: req.user,
+        data: objectlist,
         currentPage: newPage,
-        totalPage: Math.ceil(listRoot.length / newLimit),
+        totalPage: pages,
       });
     } catch (error: any) {
       return res.status(500).json({

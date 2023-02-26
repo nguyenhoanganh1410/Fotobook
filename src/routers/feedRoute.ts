@@ -11,7 +11,7 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
 
     if ((user as IUser).role === "admin") {
-      res.send("admin page");
+      res.redirect("/admin/photos?page=1&limit=20");
     }
     next();
   } else {
