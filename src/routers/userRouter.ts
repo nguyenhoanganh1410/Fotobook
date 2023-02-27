@@ -9,11 +9,17 @@ router.get("/", controller.getAllUser);
 //[Post] /users/ #create a new user
 router.post("/", controller.createUser);
 
-// [GET] /profile/:id  #redirect to my profile page
+// [PUT] /update/:id  #redirect to my profile page
 router.put(
   "/update/:id/:fileUpload",
   upload.single("filename"),
   controller.updateUser
+);
+// [PUT] /update/:id  #update password
+router.put(
+  "/update-password/:id",
+
+  controller.updatePassword
 );
 
 export = router;

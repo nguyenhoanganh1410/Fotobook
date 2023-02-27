@@ -52,7 +52,7 @@ block main
                                     .col-5.d-flex.justify-content-end.align-items-center
                                     .col-7.mt-3
                                         button#submitBtn.btn.btn-success(type='button' data-id= user._id) Save
-                        form(action='' style='margin-top: 3.5rem;')
+                        form#formUpdatePassword(action='' style='margin-top: 3.5rem;' method="POST")
                             .form-top
                                 .row.mt-2
                                     .col-5.d-flex.justify-content-end.align-items-center
@@ -62,14 +62,14 @@ block main
                                     .col-5.d-flex.justify-content-end.align-items-center
                                         label.mr-sm-2.text-right.label-custom(for='currentPass') Current Password:
                                     .col-7.mb-2
-                                        input#currentPass.form-control.mb-2.mr-sm-2.input-custom(type='text' placeholder='Enter Current password' required='')
+                                        input#currentPass.form-control.mb-2.mr-sm-2.input-custom(type='password' name="currentPassword" placeholder='Enter Current password' required='')
                                 .row.mt-2
                                     .col-5.d-flex.justify-content-end.align-items-center
                                         label.mr-sm-2.text-right.label-custom(for='newPassword') New Password:
                                     .col-7.mb-2
                                         span#erro_password(style='color: red')
                                             | **Maximum 64 characters
-                                        input#newPassword.form-control.mb-2.mr-sm-2.input-custom(type='password' placeholder='Enter new password' required='')
+                                        input#newPassword.form-control.mb-2.mr-sm-2.input-custom(type='password' name="password" placeholder='Enter new password' required='')
                                 .row.mt-2
                                     .col-5.d-flex.justify-content-end.align-items-center
                                         label.mr-sm-2.text-right.label-custom(for='passConfirm') Password Confimation:
@@ -80,7 +80,7 @@ block main
                                 .row.mt-4
                                     .col-5.d-flex.justify-content-end.align-items-center
                                     .col-7.mt-3
-                                        button#submitChangePass.btn.btn-success(type='submit') Save
+                                        button#submitChangePass.btn.btn-success(type='submit'  data-id= user._id) Save
 
                                     
         .col-lg-1.col-xl-2
@@ -185,28 +185,28 @@ block main
             });
             function validateConfirmPassword() {
                 let confirmPasswordValue = $("#passConfirm").val();
-                let passwordValue = $("#password").val();
+                let passwordValue = $("#newPassword").val();
                 if (passwordValue != confirmPasswordValue) {
-                $("#erro_password_comfi").show();
-                $("#erro_password_comfi").html("**Password didn't Match");
+                    $("#erro_password_comfi").show();
+                    $("#erro_password_comfi").html("**Password didn't Match");
 
-                return false;
+                    return false;
                 } else {
-                $("#erro_password_comfi").hide();
-                return true;
+                    $("#erro_password_comfi").hide();
+                    return true;
                 }
             }
-            // Submit button
-            $("#submitChangePass").click(function () {
-                if (
-                validateConfirmPassword() &&         
-                validatePassword() 
+            //- // Submit button
+            //- $("#submitChangePass").click(function () {
+            //-     if (
+            //-     validateConfirmPassword() &&         
+            //-     validatePassword() 
         
-                ) {
-                return true;
-                }
-                return false;
-            });
+            //-     ) {
+            //-     return true;
+            //-     }
+            //-     return false;
+            //- });
         
             $("#submitBtn").click(function(){ 
                 if ( !validateFirstname() || !validateLastname() || !ValidateEmail()){
@@ -217,10 +217,20 @@ block main
                     changeFileUpload ?  $('#formUpdateProfile').attr('action', `/users/update/${id}/${true}?_method=PUT`) : $('#formUpdateProfile').attr('action', `/users/update/${id}/${false}?_method=PUT`)
                                                                                             
                     $( "#formUpdateProfile" ).submit();
-                }
-                
-                
-        });
+                }                
+             });
+             $("#submitChangePass").click(function(){ 
+                if (!validateConfirmPassword() || !validatePassword()){
+                    
+                    return false;
+                }else{
+
+                    let id = $(this).data('id')
+                    $('#formUpdatePassword').attr('action', `/users/update-password/${id}/?_method=PUT`)
+                                                                                            
+                    $( "#formUpdatePassword" ).submit();
+                }                
+             });
         
         
 

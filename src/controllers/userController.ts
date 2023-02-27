@@ -109,7 +109,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const param = {
       avatar: uplaodRes.data,
       firstname,
-      lastname
+      lastname,
     };
     //if upload image to s3 is success
     if (uplaodRes.success) {
@@ -129,4 +129,37 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { createUser, getAllUser, getUser, updateUser };
+// [PUT] #update password
+const updatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { currentPassword, password } = req.body;
+  console.log("new password", password);
+  // get user by id
+  const user = await User.findById(new ObjectId(req.params.id)).exec();
+  if (!user) {
+    return res.json("erro");
+  } else {
+    if (bcrypt.compareSync(currentPassword, user.password)) {
+      const passwordHash = bcrypt.hashSync(password, 10);
+      const result = await User.updateOne(
+        { _id: req.params.id },
+        { password: passwordHash }
+      );
+      return res.json(result);
+      return res.redirect("/feeds?type=photo&page=1&limit=4");
+    } else {
+      return res.json("mk hien tai chua chinh xac");
+    }
+  }
+  return res.json(req.body);
+  // try {
+  //   const result = await User.updateOne({ _id: req.params.id }, req.body);
+  //   return res.redirect("/feeds?type=photo&page=1&limit=4");
+  // } catch (error: any) {
+  //   return res.send(error.message);
+  // }
+};
+export default { createUser, getAllUser, getUser, updateUser, updatePassword };
