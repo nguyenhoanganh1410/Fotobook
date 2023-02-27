@@ -10,10 +10,10 @@ import adminRoute from "./admin/adminRoute";
 const router = express.Router();
 
 function route(app: Express) {
+  app.use("/", authRoute);
   app.use("/users", userRoute);
   app.use("/feeds", feedRoute);
   app.use("/photos", photoRoute);
-  app.use("/", authRoute);
   app.use("/me", authUser, meRoute);
   app.use("/admin", authUser, adminRoute);
   app.use("/albums", albumRoute);

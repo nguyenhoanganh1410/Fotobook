@@ -6,24 +6,22 @@ import IUser from "../interface/user";
 const LocalStrategy = local_strategy.Strategy;
 const router = express.Router();
 
-//[GET] / #goto feed page
+//[GET] localhost:8000/
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
     const { user } = req;
     //user role -> redirect newfeed
     if ((user as IUser).role === "user") {
-      res.send("user page");
+      res.redirect("/feeds?type=photo&page=1&limit=4");
     }
 
     //admin role -> redirect admin page
     if ((user as IUser).role === "admin") {
-      res.send("admin page");
+      res.redirect("/admin/photos?page=1&limit=20");
     }
-  } else {
-    //user role -> redirect newfeed
-
-    res.redirect("/feeds?type=photo&page=1&limit=4");
   }
+
+  return res.redirect("/login");
 });
 
 //[GET] /login # go to login page

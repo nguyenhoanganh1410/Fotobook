@@ -15,7 +15,8 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
     }
     next();
   } else {
-    res.redirect("/login");
+    console.log("not login");
+    res.redirect("/feeds?type=photo&page=1&limit=4");
   }
 });
 

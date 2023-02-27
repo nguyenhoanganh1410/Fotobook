@@ -11,6 +11,7 @@ interface Query {
 
 // [GET] /feeds?type=xxx&page=1&limit=3
 const getData = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("calal get data");
   const { page, limit, type } = req.query as unknown as Query;
 
   const newPage = parseInt(page);
