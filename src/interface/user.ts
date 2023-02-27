@@ -9,4 +9,5 @@ export default interface IUser extends Document {
     status: boolean;
     lastLogin: Date;
     role:string;
+    deleted: boolean;
 }

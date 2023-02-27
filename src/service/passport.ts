@@ -16,7 +16,11 @@ const authenticateUser = async (passport: any) => {
       if (!u) {
         return done(null, false);
       } else {
-        if (bcrypt.compareSync(password, u.password)) {
+        // user deleted
+        if (u.deleted === true || !u.status) {
+          console.log("user deleted");
+          return done(null, false);
+        } else if (bcrypt.compareSync(password, u.password)) {
           return done(null, u);
         } else {
           return done(null, false);

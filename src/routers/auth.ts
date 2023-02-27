@@ -10,13 +10,19 @@ const router = express.Router();
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
     const { user } = req;
+    //user role -> redirect newfeed
+    if ((user as IUser).role === "user") {
+      res.send("user page");
+    }
 
+    //admin role -> redirect admin page
     if ((user as IUser).role === "admin") {
       res.send("admin page");
     }
-    next();
   } else {
-    res.redirect("/login");
+    //user role -> redirect newfeed
+
+    res.redirect("/feeds?type=photo&page=1&limit=4");
   }
 });
 

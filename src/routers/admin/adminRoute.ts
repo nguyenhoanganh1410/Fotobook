@@ -1,6 +1,8 @@
 import express, { Express, Request, Response, NextFunction } from "express";
+import upload from "../../config/multerConfig/multerConfig";
 import albumController from "../../controllers/albumController";
 import photoController from "../../controllers/photoController";
+import userController from "../../controllers/userController";
 
 const router = express.Router();
 
@@ -26,5 +28,21 @@ router.get("/album/add-album", albumController.goToAddPage);
 
 // [GET] admin/album/:id/edit  #redirect to edit page (my photo)
 router.get("/album/:id/edit", albumController.goToEditPage);
+
+// [GET] admin/profile/:id  #redirect to my profile page
+router.get("/profile/:id", userController.getUser);
+
+// [GET] /admin/users/ #redict manager users page
+router.get("/users/", userController.getAllUser);
+
+// [GET] /admin/edit-user/ #redict edit user page
+router.get("/edit-user/:id", userController.goToEditPage);
+
+// [PUT] /update/:id  #redirect to my profile page
+router.put(
+  "/update-user/:id/:fileUpload",
+  upload.single("filename"),
+  userController.adminUpdateUser
+);
 
 export default router;

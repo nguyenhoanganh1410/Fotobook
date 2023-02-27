@@ -6,6 +6,7 @@ import User from "../model/user";
 import bcrypt from "bcryptjs";
 import { S3 } from "aws-sdk";
 import initBucket from "../service/initBucket";
+import { emailer } from "../service/email";
 
 // [POST] #create a new account
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -56,13 +57,13 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// [GET] /users/
+// [GET] /users/ #get all users with deleted = false and role is user
 const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const list = await User.find().exec();
-    return res.status(200).json({
-      users: list,
-      count: list.length,
+    const list = await User.find({ deleted: false, role: "user" }).exec();
+    res.render("admin/adminusers", {
+      title: "Manager users",
+      list,
     });
   } catch (error: any) {
     return res.status(500).json({
@@ -91,6 +92,8 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   if (fileUpload === "false") {
     //update desc, title, status in db
     try {
+      const { firstName, lastName, status } = req.body;
+
       const result = await User.updateOne({ _id: req.params.id }, req.body);
       return res.redirect("/feeds?type=photo&page=1&limit=4");
     } catch (error: any) {
@@ -148,18 +151,109 @@ const updatePassword = async (
         { _id: req.params.id },
         { password: passwordHash }
       );
-      return res.json(result);
+
       return res.redirect("/feeds?type=photo&page=1&limit=4");
     } else {
-      return res.json("mk hien tai chua chinh xac");
+      // return res.json("mk hien tai chua chinh xac");
+      res.render("pages/profile", {
+        title: "Edit Profile",
+        user,
+        message: "Wrong Current Password!!",
+      });
     }
   }
-  return res.json(req.body);
-  // try {
-  //   const result = await User.updateOne({ _id: req.params.id }, req.body);
-  //   return res.redirect("/feeds?type=photo&page=1&limit=4");
-  // } catch (error: any) {
-  //   return res.send(error.message);
-  // }
 };
-export default { createUser, getAllUser, getUser, updateUser, updatePassword };
+
+// #delete a photo
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+  //update atb deleted = false
+  User.findByIdAndUpdate(id, { deleted: true }, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      //update successfully
+      //redict my
+      res.redirect("/admin/users?page=1&limit=20");
+    }
+  });
+};
+
+// #redirect edit users page
+const goToEditPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // get photo by id
+  const userFound = await User.findById(new ObjectId(req.params.id)).exec();
+
+  res.render("admin/updateuser", {
+    title: "Edit User Profile",
+    user: req.user,
+    userUpdate: userFound,
+  });
+};
+// [PUT] #update user profile
+const adminUpdateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let { fileUpload } = req.params;
+  console.log("fileUpload", fileUpload);
+  // image upload no change
+  if (fileUpload === "false") {
+    //update desc, title, status in db
+    try {
+      const { firstName, lastName, status } = req.body;
+
+      const result = await User.updateOne({ _id: req.params.id }, req.body);
+
+      return res.redirect("/admin/users?page=1&limit=20");
+    } catch (error: any) {
+      return res.send(error.message);
+    }
+  } else {
+    const s3 = new S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    });
+    // Initialize bucket
+    await initBucket(s3);
+    const uplaodRes = await uploadToS3(s3, req.file);
+    const { firstname, lastname, status } = req.body;
+    // uplaodRes.data
+    const param = {
+      avatar: uplaodRes.data,
+      firstname,
+      lastname,
+      status,
+    };
+    //if upload image to s3 is success
+    if (uplaodRes.success) {
+      return User.updateOne({ _id: req.params.id }, param)
+        .then((result) => {
+          return res.redirect("/admin/users?page=1&limit=20");
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            message: error.message,
+            error,
+          });
+        });
+    } else {
+      res.json({ sttaus: false, message: "upload image failed" });
+    }
+  }
+};
+export default {
+  createUser,
+  getAllUser,
+  getUser,
+  updateUser,
+  updatePassword,
+  deleteUser,
+  goToEditPage,
+  adminUpdateUser,
+};

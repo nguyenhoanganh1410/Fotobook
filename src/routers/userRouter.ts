@@ -1,5 +1,6 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import upload from "../config/multerConfig/multerConfig";
+import userController from "../controllers/userController";
 import controller from "../controllers/userController";
 const router = express.Router();
 
@@ -21,5 +22,8 @@ router.put(
 
   controller.updatePassword
 );
+
+// [DELETE] /photos/delete/:id/_method=DELETE  #delete photo
+router.delete("/delete/:id", userController.deleteUser);
 
 export = router;

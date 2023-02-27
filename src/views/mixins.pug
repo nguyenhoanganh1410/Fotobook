@@ -10,18 +10,33 @@ mixin headerFotoBook(user)
         .col-8.d-flex.justify-content-between.align-items-center
           input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
           if user
-          a(href="/me/profile/" + user._id)
-            .d-flex.block-user(style='align-items: center; cursor: pointer')
-              if(user.avatar)
-                img.rounded-circle(src= user.avatar alt='Rounded Image' style='width: 30px; height: 30px')
-              else
-                 span.block-imageUser= user.firstName[0]
-              span.ml-2(style='\
-              color: #f8f8f8;\
-              font-weight: 700;\
-              font-size: 13;\
-              text-transform: capitalize;\
-              ') #{user.firstName + " " + user.lastName}
+            if(user.role == 'user')
+              a(href="/me/profile/" + user._id)
+                .d-flex.block-user(style='align-items: center; cursor: pointer')
+                  if(user.avatar)
+                    img.rounded-circle(src= user.avatar alt='Rounded Image' style='width: 30px; height: 30px')
+                  else
+                    span.block-imageUser= user.firstName[0]
+                  span.ml-2(style='\
+                  color: #f8f8f8;\
+                  font-weight: 700;\
+                  font-size: 13;\
+                  text-transform: capitalize;\
+                  ') #{user.firstName + " " + user.lastName}
+            else
+              a(href="/admin/profile/" + user._id)
+                .d-flex.block-user(style='align-items: center; cursor: pointer')
+                  if(user.avatar)
+                    img.rounded-circle(src= user.avatar alt='Rounded Image' style='width: 30px; height: 30px')
+                  else
+                    span.block-imageUser= user.firstName[0]
+                  span.ml-2(style='\
+                  color: #f8f8f8;\
+                  font-weight: 700;\
+                  font-size: 13;\
+                  text-transform: capitalize;\
+                  ') #{user.firstName + " " + user.lastName}
+          
         .col-2.login_text 
           a.text-white.logout_text.header-login(href='#' data-toggle='modal' data-target='#myModal')
             | Logout
@@ -106,6 +121,14 @@ mixin navigationAdmin(text)
       li.nav-item
         a.nav-link(href='/admin/users?page=1&limit=20') Manager Users
   else if(text === "user")
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/admin/photos?page=1&limit=20') Manager Photos
+      li.nav-item
+        a.nav-link(href='/admin/albums?page=1&limit=20') Manager Albums
+      li.nav-item
+        a.nav-link.active(href='/admin/users?page=1&limit=20') Manager Users
+  else
     ul.nav.flex-column.nav_custom
       li.nav-item
         a.nav-link(href='/admin/photos?page=1&limit=20') Manager Photos

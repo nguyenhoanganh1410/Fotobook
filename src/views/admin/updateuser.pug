@@ -4,10 +4,7 @@ block main
     +headerFotoBook(user)
     .row.myphoto-block
         .col-lg-1.col-xl-2.d-flex.justify-content-center.block-user
-            if(user.role=="admin")
-                +navigationAdmin("profile")
-            else
-                +navigation("profile")
+            +navigationAdmin("user")
         .col-lg-10.col-xl-8
             .block-content.d-flex.justify-content-between.flex-column
                 .block-content-main
@@ -20,8 +17,8 @@ block main
                                     .col-5
                                     .col-7
                                         .block-input-upload
-                                            if(user.avatar)
-                                                img#imgPreview(for='customFile' src= user.avatar)
+                                            if(userUpdate.avatar)
+                                                img#imgPreview(for='customFile' src= userUpdate.avatar)
                                             else  
                                                 img#imgPreview(for='customFile')
                                             input#customFile(type='file' accept='image/png, image/jpeg, image/gif' name='filename')
@@ -36,14 +33,14 @@ block main
                                     .col-7.mb-2
                                         span#erro_firstname(style='color: red')
                                             | **Maximum 25 characters
-                                        input#firstname.form-control.mb-2.mr-sm-2.input-custom(type='text' name="firstName" value= user.firstName placeholder='Enter firstname' required='')
+                                        input#firstname.form-control.mb-2.mr-sm-2.input-custom(type='text' name="firstName" value= userUpdate.firstName placeholder='Enter firstname' required='')
                                 .row.mt-2
                                     .col-5.d-flex.justify-content-end.align-items-center
                                         label.mr-sm-2.text-right.label-custom(for='lastName') Last Name:
                                     .col-7.mb-2
                                         span#erro_lastname(style='color: red')
                                             | **Maximum 25 characters
-                                        input#lastName.form-control.mb-2.mr-sm-2.input-custom(type='text' name="lastName" value= user.lastName placeholder='Enter last name' required='')
+                                        input#lastName.form-control.mb-2.mr-sm-2.input-custom(type='text' name="lastName" value= userUpdate.lastName placeholder='Enter last name' required='')
                                 .row.mt-2
                                     .col-5.d-flex.justify-content-end.align-items-center
                                         label.mr-sm-2.text-right.label-custom(for='email') Email Address:
@@ -51,49 +48,37 @@ block main
                                         span#erro_email(style='color: red')
                                             | **Invalid email address 
                                         input#email.form-control.mb-2.mr-sm-2.input-custom(type='email' disabled name="email" value= user.email placeholder='Enter email')
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='email') Active:
+                                    .col-7
+                                        if userUpdate.status
+                                            input.form-check-input(type='checkbox' id="myCheck" value='1' checked style="margin-left:0px")
+                                            input(type="hidden" id="textbox2" value="true" name="status" )
+                                        else
+                                            input.form-check-input(type='checkbox' id="myCheck" value='0'  style="margin-left:0px")
+                                            input(type="hidden" id="textbox2" value="false" name="status" )
                                 .row.mt-4
                                     .col-5.d-flex.justify-content-end.align-items-center
                                     .col-7.mt-3
-                                        button#submitBtn.btn.btn-success(type='button' data-id= user._id) Save
-                        form#formUpdatePassword(action='' style='margin-top: 3.5rem;' method="POST")
-                            .form-top
-                                .row.mt-2
-                                    .col-5.d-flex.justify-content-end.align-items-center
-                                    .col-7.mb-2
-                                        h6.form-top-title Password
-                                        span.text-danger= message
-                                .row.mt-2
-                                    .col-5.d-flex.justify-content-end.align-items-center
-                                        label.mr-sm-2.text-right.label-custom(for='currentPass') Current Password:
-                                    .col-7.mb-2
-                                        input#currentPass.form-control.mb-2.mr-sm-2.input-custom(type='password' name="currentPassword" placeholder='Enter Current password' required='')
-                                .row.mt-2
-                                    .col-5.d-flex.justify-content-end.align-items-center
-                                        label.mr-sm-2.text-right.label-custom(for='newPassword') New Password:
-                                    .col-7.mb-2
-                                        span#erro_password(style='color: red')
-                                            | **Maximum 64 characters
-                                        input#newPassword.form-control.mb-2.mr-sm-2.input-custom(type='password' name="password" placeholder='Enter new password' required='')
-                                .row.mt-2
-                                    .col-5.d-flex.justify-content-end.align-items-center
-                                        label.mr-sm-2.text-right.label-custom(for='passConfirm') Password Confimation:
-                                    .col-7.mb-2
-                                        span#erro_password_comfi(style='color: red')
-                                            | **Maximum 64 characters
-                                        input#passConfirm.form-control.mb-2.mr-sm-2.input-custom(type='password' placeholder='Enter password confirmation')
-                                .row.mt-4
-                                    .col-5.d-flex.justify-content-end.align-items-center
-                                    .col-7.mt-3
-                                        button#submitChangePass.btn.btn-success(type='submit'  data-id= user._id) Save
+                                        button#submitBtn.btn.btn-success(type='button' data-id= userUpdate._id) Save
 
-                                    
         .col-lg-1.col-xl-2
 
     script.
-        var changeFileUpload = false;
+        var changeFileUpload = false; 
 
-       
+      
         $(document).ready(() => {
+    
+  
+            // It gets checked to false as uncheck
+            // is the default
+            $('#myCheck').click(function() {
+                $('#textbox2').val($(this).is(':checked'));
+            });
+
+
             $("#customFile").change(function () {
             const file = this.files[0];
             changeFileUpload = true
@@ -208,25 +193,8 @@ block main
                 }else{
 
                     let id = $(this).data('id')
-                    changeFileUpload ?  $('#formUpdateProfile').attr('action', `/users/update/${id}/${true}?_method=PUT`) : $('#formUpdateProfile').attr('action', `/users/update/${id}/${false}?_method=PUT`)
+                    changeFileUpload ?  $('#formUpdateProfile').attr('action', `/admin/update-user/${id}/${true}?_method=PUT`) : $('#formUpdateProfile').attr('action', `/admin/update-user/${id}/${false}?_method=PUT`)
                                                                                             
                     $( "#formUpdateProfile" ).submit();
                 }                
              });
-             $("#submitChangePass").click(function(){ 
-                if (!validateConfirmPassword() || !validatePassword()){
-                    
-                    return false;
-                }else{
-
-                    let id = $(this).data('id')
-                    $('#formUpdatePassword').attr('action', `/users/update-password/${id}/?_method=PUT`)
-                                                                                            
-                    $( "#formUpdatePassword" ).submit();
-                }                
-             });
-        
-        
-
-
-

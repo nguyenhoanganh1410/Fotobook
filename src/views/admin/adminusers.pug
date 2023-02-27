@@ -8,18 +8,66 @@ block main
         .col-lg-10.col-xl-8
             .block-content.d-flex.justify-content-between.flex-column
                 .block-content-main
-                    .d-flex.justify-content-end(style='margin-bottom: 30px; margin-right: 15px')
-                    .row
-                        if(data.length === 0)
-                            img.isEmpty(src="https://static.thenounproject.com/png/203873-200.png")
-                        else
-                            each photo in data
-                                .col-sm-6.col-md-4.col-lg-4.col-xl-3.mb-4
-                                    +myAlbumCard(photo.images, photo.title, photo.status, photo._id)
-            
+                    table.table
+                        thead
+                            tr
+                                th Firstname
+                                th Lastname
+                                th Email
+                                th Status
+                                th Options
+                        tbody
+                            each user in list                          
+                                tr
+                                    td.text-capitalize= user.firstName
+                                    td.text-capitalize= user.lastName
+                                    td= user.email
+                                    if user.status
+                                        td.text-success Active
+                                    else
+                                        td.text-danger Locked
+                                    td
+                                        a.btn.btn-success.mr-2(href="/admin/edit-user/"+user._id+"" id="btn_update") Edit
+                                        button.btn.btn-danger(id="button_delete" type="button"  data-toggle='modal' data-id=user._id data-target='#myModelDeleteShow') Delete
+                
                 if(totalPage > 1)
                     +panigation(totalPage, currentPage, "albums")
         .col-lg-1.col-xl-2
 
+    form(method='POST' id="form_delete")
+    #myModelDeleteShow.modal.fade
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          // Modal Header
+          .modal-header
+            h4.modal-title Delete The User
+            button.close(type='button' data-dismiss='modal')
+            | &times;
+          // Modal body
+          .modal-body Do you want to delete this user?
+          // Modal footer
+          .modal-footer
+            button.btn.btn-primary(type='button' data-dismiss='modal') Cancel 
+
+            button#btnYes.btn.btn-danger(type="button") Delete
 
 
+    script.
+            var id;
+            var idUpdate;
+            var changeFileUpload = false;
+            $("#button_delete").click(function(){ 
+                id = $(this).data('id')
+            });
+          
+            $("#btnYes").click(function(){
+                 $('#form_delete').attr('action', `/users/delete/${id}?_method=DELETE`);
+                 $( "#form_delete" ).submit();
+            });
+
+            $("#btnYesUpdate").click(function(){ 
+                changeFileUpload ?  $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${true}?_method=PUT`) : $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${false}?_method=PUT`)
+                
+                $( "#formAddUpdate" ).submit();
+            
+            });
