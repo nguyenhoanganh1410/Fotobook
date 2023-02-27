@@ -1,0 +1,228 @@
+extends ../index.pug
+
+block main
+    +headerFotoBook(user)
+    .row.myphoto-block
+        .col-lg-1.col-xl-2.d-flex.justify-content-center.block-user
+            +navigation("profile")
+        .col-lg-10.col-xl-8
+            .block-content.d-flex.justify-content-between.flex-column
+                .block-content-main
+                    .block-content-top(style='margin-bottom: 3rem;')
+                        h4 Edit User Profile
+                    .block-content-bottom
+                        form#formUpdateProfile(method='POST' enctype="multipart/form-data")
+                            .form-top
+                                .row
+                                    .col-5
+                                    .col-7
+                                        .block-input-upload
+                                            if(user.avatar)
+                                                img#imgPreview(for='customFile' src= user.avatar)
+                                            else  
+                                                img#imgPreview(for='customFile')
+                                            input#customFile(type='file' accept='image/png, image/jpeg, image/gif' name='filename')
+                                            button.btn.btn-primary.btn-upload-custom(type='button') CHANGE
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                    .col-7.mb-2
+                                        h6.form-top-title Basic Information
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='firstname') First Name:
+                                    .col-7.mb-2
+                                        span#erro_firstname(style='color: red')
+                                            | **Maximum 25 characters
+                                        input#firstname.form-control.mb-2.mr-sm-2.input-custom(type='text' name="firstName" value= user.firstName placeholder='Enter firstname' required='')
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='lastName') Last Name:
+                                    .col-7.mb-2
+                                        span#erro_lastname(style='color: red')
+                                            | **Maximum 25 characters
+                                        input#lastName.form-control.mb-2.mr-sm-2.input-custom(type='text' name="lastName" value= user.lastName placeholder='Enter last name' required='')
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='email') Email Address:
+                                    .col-7
+                                        span#erro_email(style='color: red')
+                                            | **Invalid email address 
+                                        input#email.form-control.mb-2.mr-sm-2.input-custom(type='email' disabled name="email" value= user.email placeholder='Enter email')
+                                .row.mt-4
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                    .col-7.mt-3
+                                        button#submitBtn.btn.btn-success(type='button' data-id= user._id) Save
+                        form(action='' style='margin-top: 3.5rem;')
+                            .form-top
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                    .col-7.mb-2
+                                        h6.form-top-title Password
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='currentPass') Current Password:
+                                    .col-7.mb-2
+                                        input#currentPass.form-control.mb-2.mr-sm-2.input-custom(type='text' placeholder='Enter Current password' required='')
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='newPassword') New Password:
+                                    .col-7.mb-2
+                                        span#erro_password(style='color: red')
+                                            | **Maximum 64 characters
+                                        input#newPassword.form-control.mb-2.mr-sm-2.input-custom(type='password' placeholder='Enter new password' required='')
+                                .row.mt-2
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                        label.mr-sm-2.text-right.label-custom(for='passConfirm') Password Confimation:
+                                    .col-7.mb-2
+                                        span#erro_password_comfi(style='color: red')
+                                            | **Maximum 64 characters
+                                        input#passConfirm.form-control.mb-2.mr-sm-2.input-custom(type='password' placeholder='Enter password confirmation')
+                                .row.mt-4
+                                    .col-5.d-flex.justify-content-end.align-items-center
+                                    .col-7.mt-3
+                                        button#submitChangePass.btn.btn-success(type='submit') Save
+
+                                    
+        .col-lg-1.col-xl-2
+
+    script.
+        var changeFileUpload = false;
+
+       
+        $(document).ready(() => {
+            $("#customFile").change(function () {
+            const file = this.files[0];
+            changeFileUpload = true
+            if (file) {
+                let reader = new FileReader();
+                $(".span-plussicon").hide();
+                reader.onload = function (event) {
+                console.log(event.target.result);
+                $("#imgPreview").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+                console.log(reader);
+            }
+            });
+
+        });
+
+             // Validate email
+            $("#erro_email").hide();
+          
+            $("#email").keyup(function () {
+                validateFirstname();
+            });
+            function ValidateEmail() 
+            {
+              let email = $("#email").val();
+                if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+                {
+                     $("#erro_email").hide();
+                    return (true)
+                }
+                     $("#erro_email").show();
+                    return (false)
+            }
+            // Validate first name
+            $("#erro_firstname").hide();
+            let usernameError = true;
+            $("#firstname").keyup(function () {
+                validateFirstname();
+            });
+
+            function validateFirstname() {
+                let usernameValue = $("#firstname").val();
+                if (usernameValue.length > 25) {
+                $("#erro_firstname").show();
+                    usernameError = false;
+                    return false;
+                } else {
+                    $("#erro_firstname").hide();
+                    return true;
+                }
+            }
+
+            // Validate last name
+            $("#erro_lastname").hide();
+            let lastNameErro = true;
+            $("#lastName").keyup(function () {
+                validateLastname();
+            });
+
+            function validateLastname() {
+                let usernameValue = $("#lastName").val();
+                if (usernameValue.length > 25) {
+                    $("#erro_lastname").show();
+                    usernameError = false;
+                    return false;
+                } else {
+                    $("#erro_lastname").hide();
+                    return true;
+                }
+            }
+
+        // Validate Password
+            $("#erro_password").hide();
+            $("#newPassword").keyup(function () {
+                validatePassword();
+            });
+            function validatePassword() {
+                let passwordValue = $("#newPassword").val();
+                if (passwordValue.length > 64) {
+                $("#erro_password").show();
+                return false;
+                } else {
+                $("#erro_password").hide();
+                return true;
+                }
+            }
+
+            // Validate Confirm Password
+            $("#erro_password_comfi").hide();
+            $("#passConfirm").blur(function () {
+                validateConfirmPassword();
+            });
+            function validateConfirmPassword() {
+                let confirmPasswordValue = $("#passConfirm").val();
+                let passwordValue = $("#password").val();
+                if (passwordValue != confirmPasswordValue) {
+                $("#erro_password_comfi").show();
+                $("#erro_password_comfi").html("**Password didn't Match");
+
+                return false;
+                } else {
+                $("#erro_password_comfi").hide();
+                return true;
+                }
+            }
+            // Submit button
+            $("#submitChangePass").click(function () {
+                if (
+                validateConfirmPassword() &&         
+                validatePassword() 
+        
+                ) {
+                return true;
+                }
+                return false;
+            });
+        
+            $("#submitBtn").click(function(){ 
+                if ( !validateFirstname() || !validateLastname() || !ValidateEmail()){
+                    return false;
+                }else{
+
+                    let id = $(this).data('id')
+                    changeFileUpload ?  $('#formUpdateProfile').attr('action', `/users/update/${id}/${true}?_method=PUT`) : $('#formUpdateProfile').attr('action', `/users/update/${id}/${false}?_method=PUT`)
+                                                                                            
+                    $( "#formUpdateProfile" ).submit();
+                }
+                
+                
+        });
+        
+        
+
+
+

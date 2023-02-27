@@ -107,9 +107,9 @@ block main
         // Submit button
         $("#submitBtn").click(function () {
         if (
-        validateConfirmPassword() &&
-        validateFirstname() &&
-        validateLastname() &&
+        validateConfirmPassword() ||
+        validateFirstname() ||
+        validateLastname() ||
         validatePassword() 
         ) {
         return true;

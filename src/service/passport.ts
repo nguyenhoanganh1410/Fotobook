@@ -11,6 +11,8 @@ const authenticateUser = async (passport: any) => {
       console.log(`username:::${username}, pass::::${password}`);
 
       const u = await User.findOne({ email: username }).exec();
+      console.log(u);
+
       if (!u) {
         return done(null, false);
       } else {

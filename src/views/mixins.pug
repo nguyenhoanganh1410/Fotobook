@@ -10,14 +10,18 @@ mixin headerFotoBook(user)
         .col-8.d-flex.justify-content-between.align-items-center
           input#search.form-control.w-50.div_reponsive(placeholder='Search photo / albums' type='text')
           if user
-          .d-flex.block-user(style='align-items: center; cursor: pointer')
-            img.rounded-circle(src='/images/1677312676964-download%20(8).jpeg' alt='Rounded Image' style='width: 30px; height: 30px')
-            span.ml-2(style='\
-            color: #f8f8f8;\
-            font-weight: 700;\
-            font-size: 13;\
-            text-transform: capitalize;\
-            ') #{user.firstName + " " + user.lastName}
+          a(href="/me/profile/" + user._id)
+            .d-flex.block-user(style='align-items: center; cursor: pointer')
+              if(user.avatar)
+                img.rounded-circle(src= user.avatar alt='Rounded Image' style='width: 30px; height: 30px')
+              else
+                 span.block-imageUser= user.firstName[0]
+              span.ml-2(style='\
+              color: #f8f8f8;\
+              font-weight: 700;\
+              font-size: 13;\
+              text-transform: capitalize;\
+              ') #{user.firstName + " " + user.lastName}
         .col-2.login_text 
           a.text-white.logout_text.header-login(href='#' data-toggle='modal' data-target='#myModal')
             | Logout
@@ -75,6 +79,14 @@ mixin navigation(text)
         a.nav-link(href='/me/photos?page=1&limit=20') My Photos
       li.nav-item
         a.nav-link.active(href='/me/albums?page=1&limit=20') My Albums
+  else
+    ul.nav.flex-column.nav_custom
+      li.nav-item
+        a.nav-link(href='/feeds?type=photo&page=1&limit=4') My Feed
+      li.nav-item
+        a.nav-link(href='/me/photos?page=1&limit=20') My Photos
+      li.nav-item
+        a.nav-link(href='/me/albums?page=1&limit=20') My Albums
 
 mixin navigationAdmin(text)
   if(text === 'photo')
@@ -114,7 +126,10 @@ mixin cardPhoto(title, desc, image, createdAt, like, u)
           .d-flex.flex-column.justify-content-between.h-100
             .card-content-top
               .d-flex(style='align-items: center')
-                img.rounded-circle(src=image alt='Rounded Image' style='width: 30px; height: 30px')
+                if(u.avatar)
+                  img.rounded-circle(src= u.avatar alt='Rounded Image' style='width: 30px; height: 30px')
+                else
+                  span.block-imageUser= u.firstName[0]
                 span.ml-2(style='\
                 color: #3c5999;\
                 font-weight: 500;\
@@ -161,7 +176,10 @@ mixin cardAlbum(title, desc, images, createdAt, like, u)
                                                     .d-flex.flex-column.justify-content-between.h-100
                                                         .card-content-top
                                                             .d-flex(style='align-items: center')
-                                                                img.rounded-circle(src='https://www.tutorialspoint.com/bootstrap/images/64.jpg' alt='Rounded Image' style='width: 30px; height: 30px')
+                                                                if(u.avatar)
+                                                                  img.rounded-circle(src= u.avatar alt='Rounded Image' style='width: 30px; height: 30px')
+                                                                else
+                                                                  span.block-imageUser= u.firstName[0]
                                                                 span.ml-2(style='\
                                                                 color: #3c5999;\
                                                                 font-weight: 700;\

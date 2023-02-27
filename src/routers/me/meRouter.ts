@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import albumController from "../../controllers/albumController";
 import photoController from "../../controllers/photoController";
+import userController from "../../controllers/userController";
 
 const router = express.Router();
 
@@ -26,5 +27,11 @@ router.get("/album/add-album", albumController.goToAddPage);
 
 // [GET] me/album/:id/edit  #redirect to edit page (my photo)
 router.get("/album/:id/edit", albumController.goToEditPage);
+
+// [GET] me/profile/:id  #redirect to my profile page
+router.get("/profile/:id", userController.getUser);
+
+
+
 
 export default router;

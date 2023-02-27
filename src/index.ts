@@ -19,7 +19,7 @@ dotenv.config();
 const LocalStrategy = passportLocal.Strategy;
 const app: Express = express();
 const router = express();
-const port = process.env.PORT || 8004;
+const port = process.env.PORT || 8002;
 const NAMESPACE = "Server";
 
 const store = new session.MemoryStore();

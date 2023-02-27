@@ -92,7 +92,7 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// [POST] #create a new photo
+// [PUT] #update photo
 const updatePhoto = async (req: Request, res: Response, next: NextFunction) => {
   let { fileUpload } = req.params;
 

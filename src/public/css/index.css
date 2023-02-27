@@ -192,3 +192,15 @@ p {
   width: 100px;
   height: 100px;
 }
+.block-imageUser {
+  width: 34px;
+  height: 34px;
+  background: #f8f8f8;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  font-weight: 700;
+  color: #3c5999;
+}

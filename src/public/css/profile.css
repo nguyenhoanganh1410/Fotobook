@@ -1,0 +1,65 @@
+.label-custom {
+  color: #4f4f4f;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 15px;
+}
+
+.input-custom {
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+  width: 60%;
+}
+
+.form-top-title {
+  color: #3c5999;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.block-input-upload {
+  width: 10rem;
+  height: 10rem;
+  color: white;
+
+  border-radius: 8px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  position: relative;
+}
+.block-input-upload img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 8px;
+  z-index: 0;
+}
+.block-input-upload input {
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+.btn-upload-custom {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  border-color: rgba(255, 255, 255, 0.7);
+
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+
+  color: #000000;
+}
+#customFile {
+  opacity: 0;
+}
