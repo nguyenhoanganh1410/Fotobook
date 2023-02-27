@@ -17,5 +17,5 @@ export interface IAlbum {
   status: boolean;
   deleted: boolean;
   like: Array<IIdUser>;
-  userEmail: string;
+  user: Types.ObjectId;
 }

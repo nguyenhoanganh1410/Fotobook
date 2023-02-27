@@ -73,7 +73,7 @@ const createPhoto = async (req: Request, res: Response, next: NextFunction) => {
       desc,
       deleted: false,
       title,
-      userEmail: (user as IUser).email,
+      user: (user as IUser)._id,
     });
 
     return photo
@@ -149,14 +149,13 @@ const getPhotoByEmail = async (
   if (req.isAuthenticated()) {
     const { user } = req;
     const { page, limit } = req.query as unknown as Query;
-
     if (page) {
       const newPage = parseInt(page);
       const newLimit = parseInt(limit);
       const skip = (newPage - 1) * newLimit;
       try {
         const list = await Photo.find({
-          userEmail: (user as IUser).email,
+          user: (user as IUser)._id,
           deleted: false,
         })
           .sort({ createdAt: -1 })
@@ -167,12 +166,10 @@ const getPhotoByEmail = async (
           return photo.toObject();
         });
         console.log(objectlist);
-
         const listRoot = await Photo.find({
-          userEmail: (user as IUser).email,
+          user: (user as IUser)._id,
           deleted: false,
         }).exec();
-
         const pages = Math.ceil(Number(listRoot.length) / newLimit);
         console.log("page number ", pages);
         res.render("pages/myphoto", {

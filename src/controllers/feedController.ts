@@ -1,5 +1,6 @@
 import { log } from "console";
 import { NextFunction, Request, Response } from "express";
+import IUser from "../interface/user";
 import Album from "../model/album";
 import Photo from "../model/photo";
 
@@ -20,113 +21,16 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
   //featch data is photo
   if (type === "photo") {
     try {
-      const list = await Photo.aggregate([
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            status: true,
-          },
-        },
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            deleted: false,
-          },
-        },
-        {
-          /**
-           * Provide any number of field/order pairs.
-           */
-          $sort: {
-            createdAt: -1,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "userEmail",
-            foreignField: "email",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $project: {
-            image: 1,
-            title: 1,
-            desc: 1,
-            status: 1,
-            createdAt: 1,
-            like: 1,
-            _id: 1,
-            "user.lastName": 1,
-            "user.email": 1,
-            "user.avatar": 1,
-            "user.firstName": 1,
-          },
-        },
-        {
-          $skip: skip,
-        },
-        {
-          $limit: newLimit,
-        },
-      ]);
+      const list = await Photo.find({ status: true, deleted: false })
+        .skip(skip)
+        .limit(newLimit)
+        .sort("createdAt")
+        .populate<{ user: IUser }>("user", "firstName lastName avatar");
 
-      const listRoot = await Photo.aggregate([
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            status: true,
-          },
-        },
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            deleted: false,
-          },
-        },
-        {
-          /**
-           * Provide any number of field/order pairs.
-           */
-          $sort: {
-            createdAt: -1,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "userEmail",
-            foreignField: "email",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $project: {
-            image: 1,
-            title: 1,
-            desc: 1,
-            status: 1,
-            createdAt: 1,
-            like: 1,
-            _id: 1,
-            "user.lastName": 1,
-            "user.email": 1,
-            "user.avatar": 1,
-            "user.firstName": 1,
-          },
-        },
-      ]);
+      const listRoot = await Photo.find({ status: true, deleted: false })
+        .sort("createdAt")
+        .populate<{ user: IUser }>("user", "firstName lastName avatar");
+
       res.render("pages/feed", {
         title: "FotoBook",
         user: req.user,
@@ -143,112 +47,15 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
   } else {
     //type is album
     try {
-      const list = await Album.aggregate([
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            status: true,
-          },
-        },
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            deleted: false,
-          },
-        },
-        {
-          /**
-           * Provide any number of field/order pairs.
-           */
-          $sort: {
-            createdAt: -1,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "userEmail",
-            foreignField: "email",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $project: {
-            images: 1,
-            title: 1,
-            desc: 1,
-            status: 1,
-            createdAt: 1,
-            like: 1,
-            _id: 1,
-            "user.lastName": 1,
-            "user.email": 1,
-            "user.avatar": 1,
-            "user.firstName": 1,
-          },
-        },
-        {
-          $skip: skip,
-        },
-        {
-          $limit: newLimit,
-        },
-      ]);
-      const listRoot = await Album.aggregate([
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            status: true,
-          },
-        },
-        {
-          /**
-           * query: The query in MQL.
-           */
-          $match: {
-            deleted: false,
-          },
-        },
-        {
-          /**
-           * Provide any number of field/order pairs.
-           */
-          $sort: {
-            createdAt: -1,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "userEmail",
-            foreignField: "email",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $project: {
-            images: 1,
-            title: 1,
-            desc: 1,
-            status: 1,
-            createdAt: 1,
-            like: 1,
-            _id: 1,
-            "user.lastName": 1,
-            "user.email": 1,
-            "user.avatar": 1,
-            "user.firstName": 1,
-          },
-        },
-      ]);
+      const list = await Album.find({ status: true, deleted: false })
+        .skip(skip)
+        .limit(newLimit)
+        .sort("createdAt")
+        .populate<{ user: IUser }>("user", "firstName lastName avatar");
+
+      const listRoot = await Album.find({ status: true, deleted: false })
+        .sort("createdAt")
+        .populate<{ user: IUser }>("user", "firstName lastName avatar");
 
       res.render("pages/feed", {
         title: "FotoBook",

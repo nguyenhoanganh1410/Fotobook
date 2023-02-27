@@ -1,4 +1,4 @@
-import { Date, Document, Model } from "mongoose";
+import { Date, Document, Model, Types } from "mongoose";
 
 export interface IIdUser {
   _id: string;
@@ -11,5 +11,5 @@ export default interface IPhoto {
   status: boolean;
   deleted: boolean;
   like: Array<IIdUser>;
-  userEmail: string;
+  user: Types.ObjectId;
 }

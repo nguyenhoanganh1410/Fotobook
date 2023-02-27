@@ -8,7 +8,7 @@ const PhotoSchema: Schema = new Schema(
     desc: { type: String, required: true, lowercase: true, trim: true },
     status: { type: Boolean, required: true },
     deleted: { type: Boolean, required: true },
-    userEmail: { type: String, require: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     like: [
       {
         label: { type: String, required: true },
@@ -21,6 +21,6 @@ const PhotoSchema: Schema = new Schema(
   }
 );
 
-const photo = mongoose.model<IPhoto>("Photo", PhotoSchema);
+// const photo = mongoose.model<IPhoto>("Photo", PhotoSchema);
 
 export default mongoose.model<IPhoto>("Photo", PhotoSchema);

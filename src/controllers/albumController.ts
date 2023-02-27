@@ -24,7 +24,7 @@ const createAlbum = async (req: Request, res: Response, next: NextFunction) => {
       desc,
       deleted: false,
       title,
-      userEmail: (user as IUser).email,
+      user: (user as IUser)._id,
     });
 
     Object.entries(req.files).forEach((month) => {
@@ -63,7 +63,7 @@ const getAlbumsByEmail = async (req: Request, res: Response) => {
       const skip = (newPage - 1) * newLimit;
       try {
         const list = await Album.find({
-          userEmail: (user as IUser).email,
+          user: (user as IUser)._id,
           deleted: false,
         })
           .sort({ createdAt: -1 })
@@ -76,7 +76,7 @@ const getAlbumsByEmail = async (req: Request, res: Response) => {
         console.log(objectlist);
 
         const listRoot = await Album.find({
-          userEmail: (user as IUser).email,
+          user: (user as IUser)._id,
           deleted: false,
         }).exec();
         const pages = Math.ceil(Number(listRoot.length) / newLimit);

@@ -152,7 +152,7 @@ mixin cardPhoto(title, desc, image, createdAt, like, u)
                 if(u.avatar)
                   img.rounded-circle(src= u.avatar alt='Rounded Image' style='width: 30px; height: 30px')
                 else
-                  span.block-imageUser= u.firstName[0]
+                  span.bg-warning.block-imageUser= u.firstName[0]
                 span.ml-2(style='\
                 color: #3c5999;\
                 font-weight: 500;\
@@ -202,7 +202,7 @@ mixin cardAlbum(title, desc, images, createdAt, like, u)
                                                                 if(u.avatar)
                                                                   img.rounded-circle(src= u.avatar alt='Rounded Image' style='width: 30px; height: 30px')
                                                                 else
-                                                                  span.block-imageUser= u.firstName[0]
+                                                                  span.bg-warning.block-imageUser= u.firstName[0]
                                                                 span.ml-2(style='\
                                                                 color: #3c5999;\
                                                                 font-weight: 700;\
