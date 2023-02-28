@@ -6,10 +6,17 @@ import { S3 } from "aws-sdk";
 import initBucket from "../service/initBucket";
 import { uploadToS3 } from "../service/uploadToS3";
 import Album from "../model/album";
+import { request } from "http";
 
 interface Query {
   page: string;
   limit: string;
+}
+
+interface QueryAlbum {
+  deleteiImageInRoot: string;
+  changeInputUpload: string;
+  arr: string;
 }
 
 // [POST] #create a new album
@@ -175,6 +182,123 @@ const getAllALbum = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// [PUT] #update photo
+const updateAlbum = async (req: Request, res: Response, next: NextFunction) => {
+  const { deleteiImageInRoot, changeInputUpload, arr } =
+    req.query as unknown as QueryAlbum;
+  const { status, desc, title } = req.body;
+  // get album by id
+  const album = await Album.findById(new ObjectId(req.params.id)).exec();
+
+  // image upload no change
+  if (deleteiImageInRoot === "false" && changeInputUpload === "false") {
+    //update desc, title, status in db
+    try {
+      const result = await Album.updateOne({ _id: req.params.id }, req.body);
+      return res.redirect("/me/albums?page=1&limit=20");
+    } catch (error: any) {
+      return res.send(error.message);
+    }
+  } else if (deleteiImageInRoot === "true" && changeInputUpload === "false") {
+    //xóa ảnh gốc (ảnh đã lưu trongg db)
+    //params arr có dạng 34847932479324, 424802942040923 (giữ những ảnh có id này) -> id hình ảnh trong album
+
+    const newArr = arr.split(",");
+    const imageList = album?.images.filter((img) => {
+      for (let i = 0; i < newArr.length; i++) {
+        console.log("_id", img._id);
+        console.log("arrnewm", newArr[i]);
+
+        if (img._id.toString() === newArr[i]) {
+          return img;
+        }
+      }
+    });
+
+    //update in db
+    const param = {
+      images: imageList,
+      status,
+      desc,
+      title,
+    };
+
+    try {
+      const result = await Album.updateOne({ _id: req.params.id }, param);
+      return res.redirect("/me/albums?page=1&limit=20");
+    } catch (error: any) {
+      return res.send(error.message);
+    }
+  } else if (deleteiImageInRoot === "false" && changeInputUpload === "true") {
+    console.log("run case 3");
+    //TH3 - thêm mới hình ảnh vào danh sách
+    // get album by id
+
+    if (req.files && album) {
+      //tạo 1 mảng tạm lưu trữ danh sach các image trong đối tượng gốc
+      Object.entries(req.files).forEach((month) => {
+        album.images.push({
+          _id: new mongoose.Types.ObjectId(),
+          url: month[1].path.substring(11, month[1].path.length),
+        });
+        console.log(month[1].path.substring(11, month[1].path.length));
+      });
+
+      //update in db
+      const param = {
+        images: album.images,
+        status,
+        desc,
+        title,
+      };
+      try {
+        const result = await Album.updateOne({ _id: req.params.id }, param);
+        return res.redirect("/me/albums?page=1&limit=20");
+      } catch (error: any) {
+        return res.send(error.message);
+      }
+    }
+  } else if (deleteiImageInRoot === "true" && changeInputUpload === "true") {
+    //TH4 - Thêm mới hình ảnh và xóa ảnh cũ ( ảnh cũ là ảnh đã có trong db)
+    const newArr = arr.split(",");
+    const imageList = album?.images.filter((img) => {
+      for (let i = 0; i < newArr.length; i++) {
+        console.log("_id", img._id);
+        console.log("arrnewm", newArr[i]);
+
+        if (img._id.toString() === newArr[i]) {
+          return img;
+        }
+      }
+    });
+
+    if (req.files && imageList) {
+      //tạo 1 mảng tạm lưu trữ danh sach các image trong đối tượng gốc
+      Object.entries(req.files).forEach((month) => {
+        imageList.push({
+          _id: new mongoose.Types.ObjectId(),
+          url: month[1].path.substring(11, month[1].path.length),
+        });
+        console.log(month[1].path.substring(11, month[1].path.length));
+      });
+
+      //update in db
+      const param = {
+        images: imageList,
+        status,
+        desc,
+        title,
+      };
+      try {
+        const result = await Album.updateOne({ _id: req.params.id }, param);
+        return res.redirect("/me/albums?page=1&limit=20");
+      } catch (error: any) {
+        return res.send(error.message);
+      }
+    }
+  }
+};
+
 export default {
   createAlbum,
   getAlbumsByEmail,
@@ -182,4 +306,5 @@ export default {
   goToEditPage,
   deleteAlbum,
   getAllALbum,
+  updateAlbum,
 };

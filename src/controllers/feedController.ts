@@ -24,7 +24,7 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
       const list = await Photo.find({ status: true, deleted: false })
         .skip(skip)
         .limit(newLimit)
-        .sort("createdAt")
+        .sort({ createdAt: -1 })
         .populate<{ user: IUser }>("user", "firstName lastName avatar");
 
       const listRoot = await Photo.find({ status: true, deleted: false })
@@ -50,11 +50,11 @@ const getData = async (req: Request, res: Response, next: NextFunction) => {
       const list = await Album.find({ status: true, deleted: false })
         .skip(skip)
         .limit(newLimit)
-        .sort("createdAt")
+        .sort({ createdAt: -1 })
         .populate<{ user: IUser }>("user", "firstName lastName avatar");
 
       const listRoot = await Album.find({ status: true, deleted: false })
-        .sort("createdAt")
+        .sort({ createdAt: -1 })
         .populate<{ user: IUser }>("user", "firstName lastName avatar");
 
       res.render("pages/feed", {

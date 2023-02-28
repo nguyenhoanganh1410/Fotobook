@@ -13,4 +13,11 @@ router.post("/add", upload.array("images", 50), albumController.createAlbum);
 // [DELETE] /albums/delete/:id/_method=DELETE  #delete album
 router.delete("/delete/:id", albumController.deleteAlbum);
 
+// [PUT] //albums/update/${idUlbum}?deleteiImageInRoot=false&changeInputUpload=false_method=PUT
+router.put(
+  "/update/:id",
+  upload.array("images", 50),
+  albumController.updateAlbum
+);
+
 export default router;

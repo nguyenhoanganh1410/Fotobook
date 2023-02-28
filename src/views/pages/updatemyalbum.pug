@@ -10,7 +10,7 @@ block main
             .block-content(style='padding: 30px 15px 30px 15px; position: relative')
                 .d-flex.justify-content-start(style='margin-left: 30px')
                     p.add-title Update Album
-                form.row#formAlbums(method='POST' action='/albums/add' enctype="multipart/form-data")
+                form.row#formAlbums(method='POST' enctype="multipart/form-data")
                     .col-lg-6
                         .row
                             .col-lg-12
@@ -34,12 +34,12 @@ block main
                                 span#erro_desc(style='color: red') **Maximum 300 characters
                             textarea#comment.form-control(rows='5' placeholder='Album Description' name='desc' required='')= album.desc
                     .col-lg-12
-                        #block-image-preview.row.mt-4
+                        #block-image-preview.row.mt-4(data-albumimage= album.images)
                             each thisAlbum in album.images
-                                .col-lg-3.col-xl-3
+                                .col-lg-3.col-xl-3.blockWillDelete
                                     .custom-file.mt-2.block-file
                                         img#imgPreview.image-file-input(for='customFile' src= thisAlbum.url)
-                                        span.span-deleteIcon(for='customFile')
+                                        span.clickDelete.span-deleteIcon(for='customFile' data-idobject= thisAlbum._id)
                                             i.fa.fa-plus(aria-hidden='true')
 
                             .col-lg-3.col-xl-3
@@ -92,9 +92,61 @@ block main
             button#btnYesUpdate.btn.btn-danger(type="button") Update
    
     script.
+        
             var id;
             var idUpdate;
             var changeFileUpload = false;
+
+            let arrAlbumRoot = $("#block-image-preview").data("albumimage").map(val =>{
+                return val._id
+            })
+            console.log(arrAlbumRoot)
+            let deleteImageinRoot = false;
+            //click delete image block
+            $(".clickDelete").click(function (e) {
+                console.log("clicked delete image")
+                let id = $(this).data('idobject')
+                $(this).parent().parent().remove();
+                deleteImageinRoot = true;
+                
+                const index = arrAlbumRoot.findIndex(
+                    (item) => item === id
+                );
+                arrAlbumRoot.splice(index, 1);
+                console.log(arrAlbumRoot)
+
+            })
+
+            $("#btnYesUpdate").click(function(){ 
+                //4 cases
+                if(changeFileUpload == false && deleteImageinRoot == false){
+                    $('#formAlbums').attr('action', `/albums/update/${idUpdate}?deleteiImageInRoot=${false}&changeInputUpload=${false}&_method=PUT`)
+                }
+                else if(changeFileUpload == false && deleteImageinRoot == true){
+                     $('#formAlbums').attr('action', `/albums/update/${idUpdate}?deleteiImageInRoot=${true}&changeInputUpload=${false}&arr=${arrAlbumRoot}&_method=PUT`)
+                }else if(changeFileUpload == true && deleteImageinRoot == false){
+                      $('#formAlbums').attr('action', `/albums/update/${idUpdate}?deleteiImageInRoot=${false}&changeInputUpload=${true}&_method=PUT`)
+                }else if(changeFileUpload == true && deleteImageinRoot == true){
+                        $('#formAlbums').attr('action', `/albums/update/${idUpdate}?deleteiImageInRoot=${true}&changeInputUpload=${true}&arr=${arrAlbumRoot}&_method=PUT`)
+                }
+                
+                 if (validateTitle() && validateDesc()) {
+                    console.log("subutmo sucess")
+                    // Now let's create a DataTransfer to get a FileList
+                    const dataTransfer = new DataTransfer();
+                    for (let i = 0; i < arrFile.length; i++) {
+                        dataTransfer.items.add(arrFile[i]);
+                    }
+                    console.log("datatranfer: ", dataTransfer.files);
+
+                    fileUlload.files = dataTransfer.files;
+
+             
+                }
+                $( "#formAlbums" ).submit();
+            
+            });
+
             $("#button_delete").click(function(){ 
                 id = $(this).data('id')
             });
@@ -108,89 +160,67 @@ block main
                  $( "#form_delete" ).submit();
             });
 
-            $("#btnYesUpdate").click(function(){ 
-                changeFileUpload ?  $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${true}?_method=PUT`) : $('#formAddUpdate').attr('action', `/photos/update/${idUpdate}/${false}?_method=PUT`)
-                
-                $( "#formAddUpdate" ).submit();
-            
-            });
-        var arrFile = [];
-        var fileUlload = document.getElementById("customFile");
-        var blockPreview = document.getElementById("block-image-preview"); // Create with DOM
-        function preview_images() {
-            var fileElement = document.getElementById("customFile").files;
-            for (var i = 0; i < fileElement.length; i++) {
-            arrFile.push(fileElement[i]);
-            addImage(fileElement[i]);
-            }
-        }
-
-        function addImage(fileElement) {
-            var parentDiv = document.createElement("div"); // Create with DOM
-            parentDiv.classList = "col-lg-3 col-xl-3";
-            parentDiv.id = fileElement.lastModified;
-            var subDiv = document.createElement("div"); // Create with DOM
-            subDiv.classList = "custom-file mt-2 block-file";
-
-            // create a new image element
-            var newImg = document.createElement("img"); // Create with DOM
-            newImg.classList = "image-file-input";
-            newImg.setAttribute("src", URL.createObjectURL(fileElement));
-
-            var spanBlock = document.createElement("span"); // Create with DOM
-            spanBlock.classList = "span-deleteIcon";
-
-            spanBlock.setAttribute("data-filename", fileElement.lastModified);
-            var lastModified = fileElement.lastModified;
-            spanBlock.addEventListener("click", () => {
-            //remove element with lastModified
-            deleteImage(lastModified);
-            });
-
-            var iElement = document.createElement("i"); // Create with DOM
-            iElement.classList = "fa fa-plus";
-            iElement.setAttribute("aria-hidden", true);
-
-            spanBlock.append(iElement);
-            subDiv.append(spanBlock);
-            subDiv.append(newImg);
-            parentDiv.append(subDiv);
-
-            blockPreview.prepend(parentDiv);
-        }
-
-        function deleteImage(lastModified) {
-            //remove element in array with lastModified
-            console.log("delete start: ");
-            const index = arrFile.findIndex(
-            (item) => item.lastModified === lastModified
-            );
-            arrFile.splice(index, 1);
-            console.log("delete sucessfully");
-
-            let elementDelete = document.getElementById(lastModified);
-            elementDelete.remove();
-            console.log(elementDelete);
-        }
-
-        $(document).ready(function(){
-            //click submit button
-            $("#btn-submitFormAlbum").click(function (e) {
-                console.log("submit click")
-                if (validateTitle() && validateDesc()) {
-                    console.log("subutmo sucess")
-                    // Now let's create a DataTransfer to get a FileList
-                    const dataTransfer = new DataTransfer();
-                    for (let i = 0; i < arrFile.length; i++) {
-                        dataTransfer.items.add(arrFile[i]);
-                    }
-                    console.log("datatranfer: ", dataTransfer.files);
-
-                    fileUlload.files = dataTransfer.files;
-
-                    $("#formAlbums").submit();
+           
+            var arrFile = [];
+            var fileUlload = document.getElementById("customFile");
+            var blockPreview = document.getElementById("block-image-preview"); // Create with DOM
+            function preview_images() {
+                changeFileUpload = true
+                var fileElement = document.getElementById("customFile").files;
+                for (var i = 0; i < fileElement.length; i++) {
+                    arrFile.push(fileElement[i]);
+                    addImage(fileElement[i]);
                 }
-            });
+                console.log(arrFile)
+            }
+
+            function addImage(fileElement) {
+                var parentDiv = document.createElement("div"); // Create with DOM
+                parentDiv.classList = "col-lg-3 col-xl-3";
+                parentDiv.id = fileElement.lastModified;
+                var subDiv = document.createElement("div"); // Create with DOM
+                subDiv.classList = "custom-file mt-2 block-file";
+
+                // create a new image element
+                var newImg = document.createElement("img"); // Create with DOM
+                newImg.classList = "image-file-input";
+                newImg.setAttribute("src", URL.createObjectURL(fileElement));
+
+                var spanBlock = document.createElement("span"); // Create with DOM
+                spanBlock.classList = "span-deleteIcon";
+
+                spanBlock.setAttribute("data-filename", fileElement.lastModified);
+                var lastModified = fileElement.lastModified;
+                spanBlock.addEventListener("click", () => {
+                //remove element with lastModified
+                deleteImage(lastModified);
+                });
+
+                var iElement = document.createElement("i"); // Create with DOM
+                iElement.classList = "fa fa-plus";
+                iElement.setAttribute("aria-hidden", true);
+
+                spanBlock.append(iElement);
+                subDiv.append(spanBlock);
+                subDiv.append(newImg);
+                parentDiv.append(subDiv);
+
+                blockPreview.prepend(parentDiv);
+            }
+
+            function deleteImage(lastModified) {
+                //remove element in array with lastModified
+                console.log("delete start: ");
+                const index = arrFile.findIndex(
+                (item) => item.lastModified === lastModified
+                );
+                arrFile.splice(index, 1);
+                console.log("delete sucessfully");
+
+                let elementDelete = document.getElementById(lastModified);
+                elementDelete.remove();
+                console.log(elementDelete);
+            }
 
             // Validate title
             $("#erro_title").hide();
@@ -239,6 +269,6 @@ block main
                     return true;
                 }
             }
-        });
+
 
 
