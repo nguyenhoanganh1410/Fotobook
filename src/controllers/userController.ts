@@ -64,6 +64,7 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
     res.render("admin/adminusers", {
       title: "Manager users",
       list,
+      user: req.user,
     });
   } catch (error: any) {
     return res.status(500).json({
